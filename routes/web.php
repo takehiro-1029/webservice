@@ -21,6 +21,9 @@ Route::get('getcoincheck','Auth\TwitterController@getCoincheck');
 Route::get('gettwitterComment','Auth\TwitterController@gettwitterComment');
 Route::get('getCryptoComment','Auth\TwitterController@getCryptoComment');
 Route::get('follow','Auth\TwitterController@follow');
+Route::post('userfollow', 'Auth\TwitterController@userfollow')->name('twitter.follow');
+Route::get('Callback', 'Auth\TwitterController@Callback');
+Route::get('cryptocommenthome', 'Auth\TwitterController@cryptocommenthome');
 
 
 Auth::routes();

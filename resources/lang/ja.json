@@ -4,7 +4,6 @@
     "Category": "カテゴリー",
     "Problem": "問題",
     "Register":"登録",
-    "Drill List":"タイピングゲーム！！",
     "Go Practice":"練習",
     "Invalid operation was performed.": "不正な操作が行われました",
     "Go Edit":"編集",
@@ -14,6 +13,11 @@
     "Create Drill":"新規作成",
     "Back Page":"戻る",
     "Drill Updater":"ドリル更新",
-    "Registered.":"更新したドう"
+    "Registered.":"更新したドう",
+    "Login":"ログイン",
+    "E-Mail Address":"メールアドレス",
+    "Password":"パスワード",
+    "Forgot Your Password?":"パスワード忘れた方はこちらへ",
+    "Remember Me":"保存する"
     
 }
