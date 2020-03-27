@@ -1851,10 +1851,10 @@ module.exports = function isBuffer (obj) {
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CryptoRankComponent.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/CryptoRankComponent.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1875,24 +1875,294 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: [],
+  data: function data() {
+    return {
+      btc: [],
+      updatetime: '',
+      cryptodetail: [{
+        name: "BTC",
+        currentprice: 0,
+        commentnum: 0
+      }, {
+        name: "ETH",
+        currentprice: 0,
+        commentnum: 0
+      }, {
+        name: "ETC",
+        currentprice: 0,
+        commentnum: 0
+      }, {
+        name: "LSK",
+        currentprice: 0,
+        commentnum: 0
+      }, {
+        name: "FCT",
+        currentprice: 0,
+        commentnum: 0
+      }, {
+        name: "XRP",
+        currentprice: 0,
+        commentnum: 0
+      }, {
+        name: "XEM",
+        currentprice: 0,
+        commentnum: 0
+      }, {
+        name: "LTC",
+        currentprice: 0,
+        commentnum: 0
+      }, {
+        name: "BCH",
+        currentprice: 0,
+        commentnum: 0
+      }, {
+        name: "MONA",
+        currentprice: 0,
+        commentnum: 0
+      }, {
+        name: "XLM",
+        currentprice: 0,
+        commentnum: 0
+      }, {
+        name: "QTUM",
+        currentprice: 0,
+        commentnum: 0
+      }],
+      cryptocheck: ["BTC", "ETH", "ETC", "LSK", "FCT", "XRP", "XEM", "LTC", "BCH", "MONA", "XLM", "QTUM"],
+      cryptoselected: ["BTC", "ETH", "ETC", "LSK", "FCT", "XRP", "XEM", "LTC", "BCH", "MONA", "XLM", "QTUM"]
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    axios.get('/api/coincheck').then(function (res) {
+      for (var i = 0; i < res.data.current_price.length; i++) {
+        _this.$set(_this.cryptodetail[i], 'currentprice', res.data.current_price[i]);
+      }
+
+      ;
+      _this.btc = res.data.btc_rate;
+    })["catch"](function (error) {
+      return console.log(error);
+    });
+    axios.get('/api/weekcomment').then(function (res) {
+      for (var i = 0; i < Object.keys(res.data.weekcomment).length; i++) {
+        _this.$set(_this.cryptodetail[i], 'commentnum', res.data.weekcomment[_this.cryptodetail[i].name]);
+      }
+
+      ;
+      _this.updatetime = res.data.searchendtime.search_endtime;
+    })["catch"](function (error) {
+      return console.log(error);
+    });
+  },
+  computed: {
+    sortedItemsByAmount: function sortedItemsByAmount() {
+      var cryptoselected = this.cryptoselected;
+      return this.cryptodetail.filter(function (value, index) {
+        for (var i in cryptoselected) {
+          if (value.name === cryptoselected[i]) return true;
+        }
+      }).sort(function (a, b) {
+        return a.commentnum < b.commentnum ? 1 : a.commentnum > b.commentnum ? -1 : 0;
+      });
+    }
+  },
+  methods: {
+    hourcomment: function hourcomment() {
+      var _this2 = this;
+
+      axios.get('/api/hourcomment').then(function (res) {
+        for (var i = 0; i < Object.keys(res.data.hourcomment).length; i++) {
+          _this2.$set(_this2.cryptodetail[i], 'commentnum', res.data.hourcomment[_this2.cryptodetail[i].name]);
+        }
+
+        ;
+        _this2.updatetime = res.data.searchendtime.search_endtime;
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+    },
+    daycomment: function daycomment() {
+      var _this3 = this;
+
+      axios.get('/api/daycomment').then(function (res) {
+        for (var i = 0; i < Object.keys(res.data.daycomment).length; i++) {
+          _this3.$set(_this3.cryptodetail[i], 'commentnum', res.data.daycomment[_this3.cryptodetail[i].name]);
+        }
+
+        ;
+        _this3.updatetime = res.data.searchendtime.search_endtime;
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+    },
+    weekcomment: function weekcomment() {
+      var _this4 = this;
+
+      axios.get('/api/weekcomment').then(function (res) {
+        for (var i = 0; i < Object.keys(res.data.weekcomment).length; i++) {
+          _this4.$set(_this4.cryptodetail[i], 'commentnum', res.data.weekcomment[_this4.cryptodetail[i].name]);
+        }
+
+        ;
+        _this4.updatetime = res.data.searchendtime.search_endtime;
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TwitteraccountComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TwitteraccountComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['user_nofollowing_account'],
   data: function data() {
     return {
-      follow_user: this.user_nofollowing_account
+      follow_user: this.user_nofollowing_account,
+      message: null,
+      processing: false
     };
   },
   computed: {},
   methods: {
     user_follow: function user_follow(index) {
+      var _this = this;
+
+      this.processing = true;
       axios.post('/api/follow', {
         action: this.user_nofollowing_account[index].screen_name
       }).then(function (res) {
-        console.log(res.data.name);
+        console.log(res.data.message);
+        _this.message = res.data.message;
+
+        _this.user_nofollowing_account.splice(index, 1);
+
+        setTimeout(function () {
+          _this.message = null;
+        }, 2000);
+        _this.processing = false;
       })["catch"](function (error) {
         return console.log(error);
       });
-      this.user_nofollowing_account.splice(index, 1);
+    },
+    user_reload: function user_reload() {
+      var _this2 = this;
+
+      this.processing = true;
+      axios.get('/api/reload').then(function (res) {
+        _this2.follow_user = res.data.user_nofollowing_account;
+        _this2.user_nofollowing_account = res.data.user_nofollowing_account;
+        _this2.message = res.data.message;
+        setTimeout(function () {
+          _this2.message = null;
+        }, 2000);
+        _this2.processing = false;
+      })["catch"](function (error) {
+        return console.log(error);
+      });
+    },
+    auto_follow: function auto_follow() {
+      var _this3 = this;
+
+      var auto_id = [];
+
+      for (var i = 0, l = this.follow_user.length; i < l; i++) {
+        console.log(this.follow_user[i].screen_name);
+        auto_id[i] = this.follow_user[i].screen_name;
+      }
+
+      ;
+
+      if (auto_id.length > 0) {
+        this.processing = true;
+        axios.post('/api/autofollow', {
+          action: auto_id
+        }).then(function (res) {
+          console.log(res.data.message);
+          _this3.message = res.data.message;
+          _this3.user_nofollowing_account = [];
+          _this3.follow_user = [];
+          setTimeout(function () {
+            _this3.message = null;
+          }, 2000);
+          _this3.processing = false;
+        })["catch"](function (error) {
+          return console.log(error);
+        });
+      }
     }
   }
 });
@@ -37254,10 +37524,192 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&":
-/*!*******************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e& ***!
-  \*******************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CryptoRankComponent.vue?vue&type=template&id=e29cee56&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/CryptoRankComponent.vue?vue&type=template&id=e29cee56& ***!
+  \**********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "p-rank-box__header" }, [
+      _c("div", { staticClass: "p-rank-box__tit" }, [
+        _vm._v("仮想通貨トレンドランキング")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "p-rank-box__update" }, [
+        _vm._v("更新日時:" + _vm._s(_vm.updatetime))
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "p-rank-box__update" }, [
+        _vm._v("ビットコイン最高価格:" + _vm._s(_vm.btc.high) + "円")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "p-rank-box__update" }, [
+        _vm._v("ビットコイン最低価格:" + _vm._s(_vm.btc.low) + "円")
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "p-rank-box__buttons" }, [
+      _c("ul", [
+        _c(
+          "li",
+          {
+            staticClass: "p-rank-box__buttons-btn active",
+            on: { click: _vm.hourcomment }
+          },
+          [_vm._v("過去1時間")]
+        ),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            staticClass: "p-rank-box__buttons-btn",
+            on: { click: _vm.daycomment }
+          },
+          [_vm._v("過去1日")]
+        ),
+        _vm._v(" "),
+        _c(
+          "li",
+          {
+            staticClass: "p-rank-box__buttons-btn",
+            on: { click: _vm.weekcomment }
+          },
+          [_vm._v("過去1週間")]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      _vm._l(_vm.cryptocheck, function(value) {
+        return _c("label", { staticClass: "p-rank-box__select-chk" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.cryptoselected,
+                expression: "cryptoselected"
+              }
+            ],
+            attrs: { type: "checkbox" },
+            domProps: {
+              value: value,
+              checked: Array.isArray(_vm.cryptoselected)
+                ? _vm._i(_vm.cryptoselected, value) > -1
+                : _vm.cryptoselected
+            },
+            on: {
+              change: function($event) {
+                var $$a = _vm.cryptoselected,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false
+                if (Array.isArray($$a)) {
+                  var $$v = value,
+                    $$i = _vm._i($$a, $$v)
+                  if ($$el.checked) {
+                    $$i < 0 && (_vm.cryptoselected = $$a.concat([$$v]))
+                  } else {
+                    $$i > -1 &&
+                      (_vm.cryptoselected = $$a
+                        .slice(0, $$i)
+                        .concat($$a.slice($$i + 1)))
+                  }
+                } else {
+                  _vm.cryptoselected = $$c
+                }
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("span", [_vm._v(_vm._s(value))])
+        ])
+      }),
+      0
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "p-rank-box__table" }, [
+      _c("table", [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.sortedItemsByAmount, function(crypto, index) {
+            return _c("tr", [
+              _c("td", { staticClass: "p-rank-box__table-no" }, [
+                _vm._v(_vm._s(index + 1))
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "p-rank-box__table-name" }, [
+                _c(
+                  "a",
+                  {
+                    attrs: {
+                      href: "https://twitter.com/search?q=%23" + crypto.name,
+                      target: "_blank"
+                    }
+                  },
+                  [_vm._v(_vm._s(crypto.name))]
+                )
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "p-rank-box__table-tweets" }, [
+                _vm._v(_vm._s(crypto.commentnum))
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "p-rank-box__table-price" }, [
+                _vm._v(_vm._s(crypto.currentprice))
+              ])
+            ])
+          }),
+          0
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { staticClass: "p-rank-box__table-no" }, [_vm._v("No.")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "p-rank-box__table-name" }, [_vm._v("銘柄")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "p-rank-box__table-tweets" }, [
+          _vm._v("ツイート数")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "p-rank-box__table-price" }, [
+          _vm._v("現在価格（円）")
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TwitteraccountComponent.vue?vue&type=template&id=57858fa8&":
+/*!**************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TwitteraccountComponent.vue?vue&type=template&id=57858fa8& ***!
+  \**************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -37272,37 +37724,69 @@ var render = function() {
   return _c(
     "div",
     { staticClass: "container" },
-    _vm._l(_vm.follow_user, function(user, index) {
-      return _c("div", { key: user.id }, [
+    [
+      _vm.message
+        ? _c("div", { staticClass: "message" }, [
+            _c("p", { staticClass: "alert alert-success" }, [
+              _vm._v(_vm._s(_vm.message))
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c("div", [
         _c(
           "button",
           {
-            attrs: { type: "button" },
-            on: {
-              click: function($event) {
-                return _vm.user_follow(index)
-              }
-            }
+            attrs: { type: "button", disabled: _vm.processing },
+            on: { click: _vm.auto_follow }
           },
-          [_vm._v("フォロー")]
-        ),
-        _vm._v(" "),
-        _c("div", [_vm._v(_vm._s(user.account_id))]),
-        _vm._v(" "),
-        _c("div", [_vm._v(_vm._s(user.user_name))]),
-        _vm._v(" "),
-        _c("div", [_vm._v(_vm._s(user.screen_name))]),
-        _vm._v(" "),
-        _c("div", [_vm._v(_vm._s(user.description))]),
-        _vm._v(" "),
-        _c("div", [_vm._v(_vm._s(user.follows_count) + "フォロワー")]),
-        _vm._v(" "),
-        _c("div", [_vm._v(_vm._s(user.friends_count) + "フォロー")]),
-        _vm._v(" "),
-        _c("div", [_vm._v(_vm._s(user.recent_tweet))])
-      ])
-    }),
-    0
+          [_vm._v("自動フォロー")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", [
+        _c(
+          "button",
+          {
+            attrs: { type: "button", disabled: _vm.processing },
+            on: { click: _vm.user_reload }
+          },
+          [_vm._v("ユーザー情報再取得")]
+        )
+      ]),
+      _vm._v(" "),
+      _vm._l(_vm.follow_user, function(user, index) {
+        return _c("div", { key: user.id }, [
+          _c(
+            "button",
+            {
+              attrs: { type: "button", disabled: _vm.processing },
+              on: {
+                click: function($event) {
+                  return _vm.user_follow(index)
+                }
+              }
+            },
+            [_vm._v("フォロー")]
+          ),
+          _vm._v(" "),
+          _c("div", [_vm._v(_vm._s(user.account_id))]),
+          _vm._v(" "),
+          _c("div", [_vm._v(_vm._s(user.user_name))]),
+          _vm._v(" "),
+          _c("div", [_vm._v(_vm._s(user.screen_name))]),
+          _vm._v(" "),
+          _c("div", [_vm._v(_vm._s(user.description))]),
+          _vm._v(" "),
+          _c("div", [_vm._v(_vm._s(user.follows_count) + "フォロワー")]),
+          _vm._v(" "),
+          _c("div", [_vm._v(_vm._s(user.friends_count) + "フォロー")]),
+          _vm._v(" "),
+          _c("div", [_vm._v(_vm._s(user.recent_tweet))])
+        ])
+      })
+    ],
+    2
   )
 }
 var staticRenderFns = []
@@ -49495,7 +49979,8 @@ Vue.config.devtools = true;
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
+Vue.component('twitteraccount-component', __webpack_require__(/*! ./components/TwitteraccountComponent.vue */ "./resources/js/components/TwitteraccountComponent.vue")["default"]);
+Vue.component('cryptorank-component', __webpack_require__(/*! ./components/CryptoRankComponent.vue */ "./resources/js/components/CryptoRankComponent.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -49553,17 +50038,17 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
-/***/ "./resources/js/components/ExampleComponent.vue":
-/*!******************************************************!*\
-  !*** ./resources/js/components/ExampleComponent.vue ***!
-  \******************************************************/
+/***/ "./resources/js/components/CryptoRankComponent.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/CryptoRankComponent.vue ***!
+  \*********************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ExampleComponent.vue?vue&type=template&id=299e239e& */ "./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&");
-/* harmony import */ var _ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ExampleComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&");
+/* harmony import */ var _CryptoRankComponent_vue_vue_type_template_id_e29cee56___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CryptoRankComponent.vue?vue&type=template&id=e29cee56& */ "./resources/js/components/CryptoRankComponent.vue?vue&type=template&id=e29cee56&");
+/* harmony import */ var _CryptoRankComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CryptoRankComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/CryptoRankComponent.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -49573,9 +50058,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _CryptoRankComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CryptoRankComponent_vue_vue_type_template_id_e29cee56___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CryptoRankComponent_vue_vue_type_template_id_e29cee56___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -49585,38 +50070,107 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/ExampleComponent.vue"
+component.options.__file = "resources/js/components/CryptoRankComponent.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&":
-/*!*******************************************************************************!*\
-  !*** ./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js& ***!
-  \*******************************************************************************/
+/***/ "./resources/js/components/CryptoRankComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/CryptoRankComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ExampleComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CryptoRankComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./CryptoRankComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CryptoRankComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CryptoRankComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&":
-/*!*************************************************************************************!*\
-  !*** ./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e& ***!
-  \*************************************************************************************/
+/***/ "./resources/js/components/CryptoRankComponent.vue?vue&type=template&id=e29cee56&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/CryptoRankComponent.vue?vue&type=template&id=e29cee56& ***!
+  \****************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ExampleComponent.vue?vue&type=template&id=299e239e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CryptoRankComponent_vue_vue_type_template_id_e29cee56___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./CryptoRankComponent.vue?vue&type=template&id=e29cee56& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/CryptoRankComponent.vue?vue&type=template&id=e29cee56&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CryptoRankComponent_vue_vue_type_template_id_e29cee56___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CryptoRankComponent_vue_vue_type_template_id_e29cee56___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/TwitteraccountComponent.vue":
+/*!*************************************************************!*\
+  !*** ./resources/js/components/TwitteraccountComponent.vue ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TwitteraccountComponent_vue_vue_type_template_id_57858fa8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TwitteraccountComponent.vue?vue&type=template&id=57858fa8& */ "./resources/js/components/TwitteraccountComponent.vue?vue&type=template&id=57858fa8&");
+/* harmony import */ var _TwitteraccountComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TwitteraccountComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/TwitteraccountComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TwitteraccountComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TwitteraccountComponent_vue_vue_type_template_id_57858fa8___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TwitteraccountComponent_vue_vue_type_template_id_57858fa8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/TwitteraccountComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/TwitteraccountComponent.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/TwitteraccountComponent.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TwitteraccountComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./TwitteraccountComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TwitteraccountComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TwitteraccountComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/TwitteraccountComponent.vue?vue&type=template&id=57858fa8&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/TwitteraccountComponent.vue?vue&type=template&id=57858fa8& ***!
+  \********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TwitteraccountComponent_vue_vue_type_template_id_57858fa8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./TwitteraccountComponent.vue?vue&type=template&id=57858fa8& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TwitteraccountComponent.vue?vue&type=template&id=57858fa8&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TwitteraccountComponent_vue_vue_type_template_id_57858fa8___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TwitteraccountComponent_vue_vue_type_template_id_57858fa8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

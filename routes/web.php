@@ -10,22 +10,20 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('mypage','TwitterController@getNews')->name('cryptotrend.mypage');
+Route::get('CryptoRank', 'TwitterController@CryptoRank')->name('cryptotrend.rank');
+Route::get('twitter', 'TwitterController@twitter')->name('cryptotrend.usershow');
+Route::get('twitter/callback','TwitterController@twitterCallback');
+Route::get('Callback', 'TwitterController@Callback');
 
-Route::get('/', function () {return view('welcome');});
-Route::get('auth', 'Auth\Home@redirectToProvider')->name('drills.create');
-Route::get('auth/twitter', 'Auth\TwitterController@twitter');
-Route::get('auth/twitter/callback','Auth\TwitterController@twitterCallback');
-Route::get('auth/twitter/timeline','Auth\TwitterController@getTimeline');
-Route::get('googlenews','Auth\TwitterController@getNews');
-Route::get('getcoincheck','Auth\TwitterController@getCoincheck');
-Route::get('gettwitterComment','Auth\TwitterController@gettwitterComment');
-Route::get('getCryptoComment','Auth\TwitterController@getCryptoComment');
-Route::get('follow','Auth\TwitterController@follow');
-Route::post('userfollow', 'Auth\TwitterController@userfollow')->name('twitter.follow');
-Route::get('Callback', 'Auth\TwitterController@Callback');
-Route::get('cryptocommenthome', 'Auth\TwitterController@cryptocommenthome');
+
+Route::get('twitter/timeline','TwitterController@getTimeline');
+Route::get('gettwitterComment','TwitterController@gettwitterComment');
+Route::get('getCryptoComment','TwitterController@getCryptoComment');
 
 
 Auth::routes();
 
+Route::get('/', function () {return view('welcome');});
+Route::get('auth', 'Auth\Home@redirectToProvider')->name('drills.create');
 Route::get('/home', 'HomeController@index')->name('home');

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -13,21 +13,10 @@ use App\TwitterUser;
 use App\UserFollowList;
 use App\User;
 use App\CryptoComment;
-use App\Post;
-use Illuminate\Support\Facades\DB;
 
 class TwitterController extends Controller
 { 
-    //      本来はアカウント有効状態を確認するためのものですが、プロフィール取得にも使用可能
-//      $twitter_user_info = $twitter_user->get('account/verify_credentials');
-//        var_dump ($token['oauth_token']);
-//        var_dump ($token['oauth_token_secret']);
-//        session(array(
-//            'oauth_token' => $token['oauth_token'],
-//            'oauth_token_secret' => $token['oauth_token_secret'],
-//        ));
-    
-     public function twitter()
+    public function twitter()
     {
         $user_token = Auth::user()->where('id',Auth::id())->first();
         
@@ -97,7 +86,7 @@ class TwitterController extends Controller
         $now = Carbon::now();
         
         if ($now < $api_limit_time->api_limit_time){
-            return redirect('http://127.0.0.1:8000/home')->with('flash_message', 'API制限中のため15minお待ちください。');
+            return redirect('http://127.0.0.1:8000/mypage')->with('flash_message', 'API制限中のため15minお待ちください。');
         };
         
         $user_token = Auth::user()->where('id',Auth::id())->first();
@@ -178,173 +167,6 @@ class TwitterController extends Controller
          
         return view('twitter', ['user_nofollowing_account' => $user_nofollowing_account]);
         
-    }
-    
-    
-    public function userfollow(Request $request)
-    {
-        $name = $request->input('action');
-        
-        return response()->json([
-            'message' => $name,
-        ]);
-        
-        dd($name);
-        
-        $user_token = Auth::user()->where('id',Auth::id())->first();
-        $oauth_token = $user_token->oauth_token;
-        $oauth_token_secret = $user_token->oauth_token_secret;
-        
-        # access_tokenを用いればユーザー情報へアクセスできるため、それを用いてTwitterOAuthをinstance化
-        $twitter_login_user = new TwitterOAuth(
-            config('services.twitter.client_id'),
-            config('services.twitter.client_secret'),
-            $oauth_token,
-            $oauth_token_secret
-        );
-        
-        $follow = $twitter_login_user->get('friendships/lookup', array(
-                'screen_name' => $name,
-        ));
-        
-        if (!is_array($follow)){
-            return redirect('http://127.0.0.1:8000/Callback')->with('flash_message', '登録アカウントではないためフォロー機能は使用できません。');
-        };
-
-        $api_limit = $twitter_login_user->get('application/rate_limit_status', array(
-                'resources' => 'friendships',
-        ));
-        
-        $api_limit = json_decode(json_encode($api_limit),true);
-        $api_limit_num = $api_limit['resources']['friendships']['/friendships/lookup']['remaining'];
-        
-        if($api_limit_num === 0){
-            $api_limit_time = Carbon::now()->addminute(16);
-            Auth::user()->where('id',Auth::id())->update(['api_limit_time' => $api_limit_time]);
-            return redirect('http://127.0.0.1:8000/Callback')->with('flash_message', 'API制限中のため15minお待ちください。');
-        };
-
-        var_dump ($api_limit_num);
-        var_dump($follow[0]->connections[0]);
-        
-        
-//        $twitter_user = new TwitterUser;
-//        $user_nofollowing_account = $twitter_user->where('screen_name',$name)->select('id')->first();
-        
-        if($follow[0]->connections[0] === 'none' || $follow[0]->connections[0] === 'followed_by'){
-            #フォローする
-            $searchUser = $twitter_login_user->post('friendships/create',array(
-                   'screen_name' => $name,
-            ));
-            
-            dump(property_exists($searchUser, 'id'));
-            
-            if(!property_exists($searchUser, 'id')){
-                $api_limit_time = Carbon::now()->addminute(60);
-                Auth::user()->where('id',Auth::id())->update(['api_limit_time' => $api_limit_time]);
-                return redirect('http://127.0.0.1:8000/Callback')->with('flash_message', 'フォロー制限のためできひん。1時間待ってくれい。');
-            };
-            
-            $flash_message = 'フォローしました。';
-            dump ($searchUser);
-        }else{
-            $flash_message = 'フォロー済みのアカウントです。';
-        };
-        
-        var_dump ($api_limit_num);
-        
-        $twitter_user = new TwitterUser;
-        $twitter_table_id = $twitter_user->where('screen_name',$name)->select('id')->first();
-
-        $user_follow_list = new UserFollowList;
-        $user_follow_list->where('user_id',Auth::id())->where('twitter_id',$twitter_table_id->id)->update(['follow_details' => 'following']);
-        
-        return;
-//        return redirect('http://127.0.0.1:8000/Callback')->with('flash_message', $flash_message);
-        
-    }
-    
-    
-    
-    
-    
-//  twitteridを入れてフォローの有無確認(実装はユーザーアカウントで実施)
-    public function follow()
-    {
-//      ユーザーのフォローリストから未フォローのツイッターアカウント15件取得
-        $user_follow_list = new UserFollowList;
-        $user_nofollowing_account = $user_follow_list->where('user_id',Auth::id())->where(function($q){
-            $q->where('follow_details','none')
-                ->orWhere('follow_details','followed_by');
-        })->select('twitter_id')->take(15)->get()->toArray();
-        
-        $twitter_user = new TwitterUser;
-        
-//      15件ある場合はアカウント情報を取得してビューに渡す
-        if(count($user_nofollowing_account) === 15){
-            for ($i = 0; $i <= 14; $i++) {
-                $user_nofollowing_account[$i] = $twitter_user->where('id',$user_nofollowing_account[$i])->first()->toArray();
-            };
-            dd($user_nofollowing_account);
-//      15件未満の場合はフォロー有無をチェックして15件になるようにする
-        }else{
-    //      twitterにアクセス
-            $twitter = new TwitterOAuth(
-                config('services.twitter.client_id'),
-                config('services.twitter.client_secret'),
-                config('services.twitter.access_token'),
-                config('services.twitter.access_token_secret'),
-            );
-
-    //      ユーザーが最後にフォロー検索したtwitter_usersテーブルのidをusersテーブルのfollowsearch_numberから取得
-            $last_serach_num = Auth::user()->where('id',Auth::id())->value('followsearch_number');
-
-    //      twitter_usersテーブルからtwitterのアカウントidを取得(最後に検索したidより大きいものを50件取得)
-            $twitter_account_id = $twitter_user->orderBy('id', 'asc')->where('id','>',$last_serach_num)->select('account_id')->take(50)->get()->toArray();
-    //      ツイートを取得するユーザーの数
-            $twitter_user_Num= count($twitter_account_id);
-    //      連想配列から配列へ変換
-            $twitter_account_id = array_column($twitter_account_id, 'account_id');
-    //      配列を文字列に変更して,を付ける
-            $twitter_account_id = implode(',', $twitter_account_id);
-
-            var_dump ($twitter_account_id);
-
-    //      それぞれのユーザーのフォロー有無を確認して$followに格納
-            $follow = $twitter->get('friendships/lookup', array(
-                'user_id' => $twitter_account_id,
-            ));
-
-    //      users_follow_listテーブルにデータを格納するため配列を整える
-            $now = Carbon::now();
-            for ($i = 0; $i <= $twitter_user_Num-1; $i++) {
-                $followuserdata[$i]['twitter_id'] = $twitter_user->where('account_id',$follow[$i]->id)->value('id');
-    //            $followuserdata[$i]['account_id'] = $follow[$i]->id;
-                $followuserdata[$i]['user_id'] = Auth::id();
-                $followuserdata[$i]['follow_details'] = $follow[$i]->connections[0];
-                $followuserdata[$i]['created_at'] = $now;
-                $followuserdata[$i]['updated_at'] = $now;
-            };
-    //      users_follow_listテーブルに$followuserdataを格納
-            $user_follow_list = new UserFollowList;
-            $user_follow_list->insert($followuserdata);
-
-    //      次回検索のため最後にフォロー有無を確認したidをusersテーブルに入れておく
-            Auth::user()->where('id',Auth::id())->update(['followsearch_number' => $followuserdata[$twitter_user_Num-1]['twitter_id']]);
-            
-    //      再度、ユーザーのフォローリストから未フォローのツイッターアカウント15件取得
-            $user_nofollowing_account = $user_follow_list->where('user_id',Auth::id())->where(function($q){
-                $q->where('follow_details','none')
-                    ->orWhere('follow_details','followed_by');
-            })->select('twitter_id')->take(15)->get()->toArray();
-            
-            for ($i = 0; $i <= 14; $i++) {
-                $user_nofollowing_account[$i] = $twitter_user->where('id',$user_nofollowing_account[$i])->first()->toArray();
-            };
-            dd(count($user_nofollowing_account));
-        }; 
-        
-//        ビューに値を渡す処理追記する
     }
     
 //  仮想通貨に関連するユーザデータ情報を取得する処理(1度に1000件取得してDBに格納する:日によって取得idが変わるか確認必要）
@@ -449,25 +271,6 @@ class TwitterController extends Controller
              print_r('終わり');
         };
         
-//        デバック用
-////      twitterにアクセスする
-//        $twitter = new TwitterOAuth(
-//            config('services.twitter.client_id'),
-//            config('services.twitter.client_secret'),
-//            config('services.twitter.access_token'),
-//            config('services.twitter.access_token_secret'),
-//        );
-//        
-//        $timeline = $twitter->get('statuses/user_timeline', array(
-//            'user_id' =>  857031238569181184,
-//            'count' =>  1,
-//            'trim_user' =>  false, 
-//            'exclude_replies' =>  true, 
-//            'include_rts' =>  false, 
-//        ));
-//        
-//        dd(is_array($timeline));
-             
         print_r('finish');
     }
     
@@ -483,7 +286,7 @@ class TwitterController extends Controller
         );
         set_time_limit(0);
         $num = 0;
-        while($num < 40) {
+        while($num < 100) {
 //      ツイート取得（現在時間から過去30分間のツイート数:関係のないツイートを除くため今回は#を付ける）
         $keywords = ["#BTC", "#ETH", "#ETC","#LSK","#FCT","#XRP","#XEM","#LTC","#BCH","#MONA","#XLM","#QTUM"];
         $sincetime = date('Y-m-d_H:i:s', strtotime("now -10 min"));
@@ -532,73 +335,14 @@ class TwitterController extends Controller
     }
     
     
-     public function cryptocommenthome()
+     public function CryptoRank()
      {
-         $now = Carbon::now();
-         $now2 = Carbon::now()->subDay(7);
-         $now3 = Carbon::now()->subDay();
-         $now4 = Carbon::now()->subHours();
-         
-         $crypto_comment = new CryptoComment;
-         $sum_time = $crypto_comment->orderBy('id', 'desc')->select('search_endtime')->first();
-         
-         $keywords = ["BTC","ETH","ETC","LSK","FCT","XRP","XEM","LTC","BCH","MONA","XLM","QTUM"];
-         $Crypto_Num= count($keywords);
-         
-         for ($i = 0; $i <= $Crypto_Num-1; $i++) {
-             $comment_sum_week[$keywords[$i]] = $crypto_comment->whereBetween('search_endtime',[$now2,$now])->sum($keywords[$i]);
-             $comment_sum_day[$keywords[$i]] = $crypto_comment->whereBetween('search_endtime',[$now3,$now])->sum($keywords[$i]);
-             $comment_sum_hour[$keywords[$i]] = $crypto_comment->whereBetween('search_endtime',[$now4,$now])->sum($keywords[$i]);
-         };
-         
-         
-         dump ($comment_sum_week);
-         dump ($comment_sum_day);
-         dump ($comment_sum_hour);
-         dump ($sum_time->search_endtime);
-         
-         echo 'うんち'; 
-         
-         $client = new Client( [
-            'base_uri' => 'https://coincheck.com/api/',
-        ] );
-        $method='GET';
-        
-//      ビットコインの過去24時間の最高値と最低値を取得
-        $path='ticker';
-        $response = $client->request($method, $path);   
-        $posts = json_decode($response->getBody()->getContents(), true);
-//        var_dump($posts);
-        echo $posts['high'];
-        echo $posts['low'];
-        
-//      各通貨の現在価格を取得
-//      取得通貨のurl設定
-        $path='rate/';
-        $cryptotype = ["btc_jpy", "eth_jpy", "xrp_jpy","etc_jpy","lsk_jpy","fct_jpy","xem_jpy","ltc_jpy","bch_jpy","mona_jpy","xlm_jpy","qtum_jpy"];
-//      ループで回すために取得通貨数を取得
-        $CryptoNum = count($cryptotype);
-//      ループで各通貨の現在価格を取得して$CryptoCurrentValに配列で格納
-        for ($i = 0; $i <= $CryptoNum-1; $i++) {
-            $response = $client->request($method, $path.$cryptotype[$i]);   
-            $posts = json_decode($response->getBody()->getContents(), true);
-            $CryptoCurrentVal[$i] = $posts['rate'];
-        };
-        dump ($CryptoCurrentVal);
+        return view('cryptorank');
          
      }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//  グーグルニュース取得(DBにデータを入れる必要なし)    
+//  グーグルニュース取得(DBにデータを入れる必要なし:マイページ)    
     function getNews()
     {    
         #検索ワード
@@ -612,47 +356,16 @@ class TwitterController extends Controller
         
         $client = new Client();
         $response = $client->request($method, $url);
-        $posts = simplexml_load_string($response->getBody()->getContents());
+        $googlenews = simplexml_load_string($response->getBody()->getContents());
 
         #XML形式を配列に変換
-        $posts = json_decode(json_encode($posts), true);
+        $googlenews = json_decode(json_encode($googlenews), true);
 //        echo json_last_error_msg();
             
-        return view('news', ['posts' => $posts]);
+        return view('mypage', ['googlenews' => $googlenews]);
     }
     
-    
-//  コインチェックのAPIからビットコインの過去24時間の最高値と最低値＋各通貨の現在の価格を取得(DBにデータを入れる必要なし) 
-    function getCoincheck()
-    {
-        $client = new Client( [
-            'base_uri' => 'https://coincheck.com/api/',
-        ] );
-        $method='GET';
         
-//      ビットコインの過去24時間の最高値と最低値を取得
-        $path='ticker';
-        $response = $client->request($method, $path);   
-        $posts = json_decode($response->getBody()->getContents(), true);
-//        var_dump($posts);
-//        echo $posts['high'];
-//        echo $posts['low'];
-        
-//      各通貨の現在価格を取得
-//      取得通貨のurl設定
-        $path='rate/';
-        $cryptotype = ["btc_jpy", "eth_jpy", "xrp_jpy","etc_jpy","lsk_jpy","fct_jpy","xem_jpy","ltc_jpy","bch_jpy","mona_jpy","xlm_jpy","qtum_jpy"];
-//      ループで回すために取得通貨数を取得
-        $CryptoNum = count($cryptotype);
-//      ループで各通貨の現在価格を取得して$CryptoCurrentValに配列で格納
-        for ($i = 0; $i <= $CryptoNum-1; $i++) {
-            $response = $client->request($method, $path.$cryptotype[$i]);   
-            $posts = json_decode($response->getBody()->getContents(), true);
-            $CryptoCurrentVal[$i] = $posts['rate'];
-        };
-        var_dump($CryptoCurrentVal);
-    }
-    
      public function Home(){
      return view('home');
     }
@@ -662,25 +375,6 @@ class TwitterController extends Controller
         return Socialite::driver('twitter')->redirect();
     }
 
-    // コールバック
-    public function handleProviderCallback(){
-        try {
-            $twitterUser = Socialite::driver('twitter')->user();
-        } catch (Exception $e) {
-            return redirect('auth/twitter');
-        }
-        // 各自ログイン処理
-        // 例
-        // $user = User::where('auth_id', $twitterUser->id)->first();
-        // if (!$user) {
-        //     $user = User::create([
-        //         'auth_id' => $twitterUser->id
-        //   ]);
-        // }
-        // Auth::login($user);
-        return view('home');
-    }
-
     // ログアウト
     public function logout(Request $request)
     {
@@ -688,5 +382,6 @@ class TwitterController extends Controller
         // 例
 //         Auth::logout();
         return view('home');
-    }  
+    } 
+  
 }
