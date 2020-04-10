@@ -1,0 +1,52 @@
+.p-header {
+  width: 100%;
+  padding: 0 1%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+    &__logo{
+      font-size: 2.4rem;
+      @include mq(md) {
+        font-size: 2rem;
+      }
+      @include mq() {
+        font-size: 1.4rem;
+      }
+    }
+    &__btn{
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      text-align: center;
+      @include mq(md) {
+        font-size: 1.2rem;
+      }
+      @include mq() {
+        font-size: 0.7rem;
+        width: 160px;
+      }
+    }
+    &__btn-login ,&__btn-register{
+      width: 150px;
+      @include mq() {
+        width: 80px;
+      }
+    }
+    &__btn-register-btn ,&__btn-login-btn{
+      display: block;
+      &:hover {
+        font-weight: bold;
+      }
+    }
+    &__actions{
+      line-height: 20px;
+      text-align: center;
+      font-size: 1.2rem;
+      @include mq() {
+        font-size: 0.8rem;
+      }
+    }
+}

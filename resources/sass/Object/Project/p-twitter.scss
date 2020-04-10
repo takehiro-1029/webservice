@@ -1,0 +1,138 @@
+.p-tw-list{
+  &__title{
+    font-size: 2rem;
+    line-height: 50px;
+    margin-bottom: 30px;
+    @include mq(md) {
+      font-size: 1.8rem;
+      line-height: 40px;
+      text-align: center;
+    }
+    @include mq() {
+      font-size: 1.2rem;
+      line-height: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+      padding-top: 10px;
+    }
+  }
+  &__message{
+    text-align: center;
+    font-size: 1rem;
+    line-height: 2.5;
+    position: fixed;
+    background-color: #3fdcff8f;
+    width: 100%;
+    top: 0;
+    left: 0;
+    font-weight: bold;
+    z-index: 1;
+    @include mq() {
+      font-size: 0.9rem;
+      line-height: 2;
+    }
+  }
+  &__btn{
+    background: #edad0b14;
+    padding: 20px 0;
+    @include mq() {
+      background: none;
+      padding: 0;
+    }
+  }
+  &__box{
+    line-height: 1.4;
+    margin: 50px 0;
+    font-size: 1rem;
+    @include mq(md) {
+      margin: 30px 0;
+    }
+    @include mq() {
+      line-height: 1.2;
+      margin: 30px 0;
+      font-size: 0.8rem;
+    }
+    &__detail{
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
+      border: dashed 2px #fa7426d4;
+      padding: 10px 20px;
+      border-radius: 5px;
+      @include mq() {
+        margin-bottom: 20px;
+        padding: 10px 8px;
+      }
+      &__btn{
+        position: absolute;
+        left: 80%;
+        @include mq(md) {
+          left: 75%;
+        }
+        @include mq() {
+          left: 70%;
+        }
+      }
+      &__name{
+        font-weight: bold;
+        line-height: 30px;
+        @include mq(md) {
+          width: 70%;
+        }
+        @include mq() {
+          line-height: 1.5;
+          width: 60%;
+        }
+      }
+      &__sname{
+        color: #999;
+        margin-left: 10px;
+        font-size: 0.9rem;
+        line-height: 20px;
+        @include mq() {
+          color: #000;
+          margin-left: 0px;
+          font-size: 0.7rem;
+          line-height: 1.5;
+        }
+      }
+      &__desc{
+        margin: 5px 0;
+        @include mq() {
+          margin: 10px 0;
+          line-height: 1.5;
+        }
+      }
+      &__count{
+        display: flex;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+        line-height: 20px;
+        @include mq() {
+          font-size: 0.8rem;
+          line-height: 1.2;
+          width: 80%;
+          margin: 0 auto;
+        }
+        &-friends{
+          margin-left: 20px;
+        }
+        &-followers{
+          margin-left: 10px;
+        }
+      }
+      &__text{
+        background: #edad0b14;
+        border-radius: 5px;
+        padding: 0px 10px 10px 10px;
+        @include mq() {
+          padding: 0px 5px 5px 5px;
+          line-height: 1.4;
+        }
+        & p {
+          margin: 10px 0px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+.l-header {
+  width: 1000px;
+  margin: 0 auto;
+  padding: 15px 0;
+  line-height: 40px;
+  background: #fff;
+  -webkit-box-shadow: 0 10px 10px 0 rgba(237, 173, 11, 0.2);
+          box-shadow: 0 10px 10px 0 rgba(237, 173, 11, 0.2);
+  @include mq(md) {
+    width: 90%;
+  }
+  @include mq() {
+    padding: 5px 0;
+  }
+}

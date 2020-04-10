@@ -1,0 +1,48 @@
+.c-btn__autofollow {
+  font-size: 1.2rem;
+  border-radius: 3px;
+  border: none;
+  padding: 10px 15px;
+  text-align: center;
+  background: #fa7426d4;
+  color: #fff;
+  width: 320px;
+  margin: 0 auto;
+  display: block;
+  cursor: pointer;
+  box-shadow: 0px 4px 0 #fa7426;
+  @include mq() {
+    font-size: 1rem;
+    width: 260px;
+  }
+  &:hover {
+    box-shadow: none;
+    transform: translate3d(0, 4px, 0);
+  }
+
+}
+
+.c-btn__userfollow{
+  font-size: 1.2rem;
+  border-radius: 3px;
+  border: none;
+  padding: 5px 5px;
+  text-align: center;
+  background: #fa7426d4;
+  color: #fff;
+  width: 160px;
+  cursor: pointer;
+  box-shadow: 0px 4px 0 #fa7426;
+  @include mq(md) {
+    font-size: 1rem;
+  }
+  @include mq() {
+    font-size: 0.8rem;
+    padding: 2px 2px;
+    width: 80px;
+  }
+  &:hover {
+    box-shadow: none;
+    transform: translate3d(0, 4px, 0);
+  }
+}

@@ -20,71 +20,57 @@
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     </head>
     <body>
-     <!-- フラッシュメッセージ -->
-            @if (session('flash_message'))
-                <div class="alert alert-primary text-center flash_message" role="alert">
-                    {{ session('flash_message') }}
-                </div>
-            @endif
-        <div>
-            <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-                <div class="container">
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+      <!-- フラッシュメッセージ -->
+             @if (session('flash_message'))
+                 <div class="c-flash-message js-flash-message">
+                     {{ session('flash_message') }}
+                 </div>
+             @endif
 
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <!-- Left Side Of Navbar -->
-                        <ul class="navbar-nav mr-auto">
+        <header id="l-header" class="l-header">
+            <div class="p-header">
+                <h1 class="p-header__logo">
+                    <a href="{{ route('top') }}">CryptoTrend</a>
+                </h1>
 
-                        </ul>
-
-                        <!-- Right Side Of Navbar -->
-                        <ul class="navbar-nav ml-auto">
-                            <!-- Authentication Links -->
-                            @guest
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                                @if (Route::has('register'))
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                    </li>
-                                @endif
-                            @else
-                                <li class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        {{ Auth::user()->name }} <span class="caret"></span>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                           onclick="event.preventDefault();
-                                                         document.getElementById('logout-form').submit();">
-                                            {{ __('Logout') }}
-                                        </a>
-
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            @csrf
-                                        </form>
-                                    </div>
-                                </li>
-                            @endguest
-                        </ul>
+                @guest
+                    <div class="p-header__btn">
+                        <div class="p-header__btn-login">
+                            <a class="p-header__btn-login-btn" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        </div>
+                        @if (Route::has('register'))
+                            <div class="p-header__btn-register">
+                                <a class="p-header__btn-register-btn" href="{{ route('register') }}">{{ __('Register') }}</a>
+                            </div>
+                        @endif
                     </div>
-                </div>
-            </nav>
-        </div>
+                @else
+                    <div class="p-header__actions">
+                        <div class="p-header__name">{{ Auth::user()->name }} </div>
+                        <div class="p-header__logout">
+                          <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                            {{ __('Logout') }}
+                          </a>
+                          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf
+                          </form>
+                        </div>
+                    </div>
+                @endguest
 
-        <main class="py-4">
+            </div>
+        </header>
+
+        @yield('menubar')
+
+        <main class="l-main">
             @yield('content')
         </main>
 
-        <footer id="footer">
-            Copyright <a href="http://webukatu.com/">ウェブカツ!!WEBサービス部</a>. All Rights Reserved.
+        <footer id="footer" class="l-footer">
+            <div class="l-footer__copyright">
+                Copyright © 2020 <a href="{{ route('top') }}">CryptoTrend</a>. All Rights Reserved.
+            </div>
         </footer>
+
     </body>
 </html>

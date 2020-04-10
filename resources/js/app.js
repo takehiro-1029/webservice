@@ -33,3 +33,8 @@ Vue.component('cryptorank-component', require('./components/CryptoRankComponent.
 const app = new Vue({
     el: '#app',
 });
+
+// フラッシュメッセージを5秒後に消す処理
+$(function() {
+    $('.js-flash-message').fadeOut(5000);
+});

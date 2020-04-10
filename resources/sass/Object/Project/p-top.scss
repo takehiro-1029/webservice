@@ -1,0 +1,137 @@
+.p-top{
+  &__header{
+    position: relative;
+    overflow: hidden;
+    margin: 60px 0;
+    @include mq(md) {
+      margin: 40px 0;
+    }
+    @include mq() {
+      margin: 30px 0;
+    }
+    & img{
+      height: 600px;
+      width: 100%;
+      @include mq(md) {
+        height: 400px;
+      }
+      @include mq() {
+        height: 350px;
+      }
+    }
+    &__message{
+      position: absolute;
+      top: 10%;
+      left: 3%;
+      font-size: 2rem;
+      @include mq(md) {
+        font-size: 1.4rem;
+      }
+      @include mq() {
+        font-size: 1rem;
+        width: 70%;
+        font-weight: bold;
+        line-height: 1.5;
+      }
+    }
+    &__btn{
+      position: absolute;
+      top: 40%;
+      left: 20%;
+      font-size: 1.2rem;
+      display: grid;
+      text-align: center;
+      width: 30%;
+      background: #fa7426d4;
+      border-radius: 3px;
+      box-shadow: 0px 4px 0 #fa7426;
+      @include mq(md) {
+        top: 35%;
+      }
+      @include mq() {
+        font-size: 0.8rem;
+        width: 35%;
+      }
+      &:hover{
+        box-shadow: none;
+        transform: translate3d(0, 4px, 0);
+      }
+      & a{
+        padding: 20px;
+        color: #fff;
+        @include mq() {
+          padding: 5px;
+        }
+      }
+    }
+  }
+  &__main{
+    &__section{
+      display: flex;
+      justify-content: space-between;
+      text-align: center;
+      @include mq() {
+        display: block;
+      }
+      &__content{
+        width: 30%;
+        height: 350px;
+        @include mq() {
+          width: 80%;
+          height: 300px;
+          margin: 20px auto;
+        }
+        & img{
+          width:100%;
+          height: 250px;
+          @include mq(md) {
+            height: 200px;
+          }
+        }
+        & div{
+          margin: 20px 0;
+          font-size: 1.2rem;
+          font-weight: bold;
+          @include mq(md) {
+            margin: 10px 0;
+            font-size: 1rem;
+          }
+        }
+        & p{
+          font-size: 1rem;
+          line-height: 1.4;
+          padding: 0 15px;
+        }
+      }
+      &__btn{
+        font-size: 1.2rem;
+        display: grid;
+        margin: 60px auto;
+        text-align: center;
+        width: 30%;
+        background: #fa7426d4;
+        border-radius: 3px;
+        box-shadow: 0px 4px 0 #fa7426;
+        @include mq(md) {
+          width: 40%
+        }
+        @include mq() {
+          font-size: 1rem;
+          width: 70%;
+          margin: 0 auto 50px auto;
+        }
+        &:hover{
+          box-shadow: none;
+          transform: translate3d(0, 4px, 0);
+        }
+        & a{
+          padding: 20px;
+          color: #fff;
+          @include mq() {
+            padding: 15px;
+          }
+        }
+      }
+    }
+  }
+}

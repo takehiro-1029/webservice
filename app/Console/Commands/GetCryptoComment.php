@@ -7,21 +7,21 @@ use Abraham\TwitterOAuth\TwitterOAuth;
 use Carbon\Carbon;
 use App\CryptoComment;
 
-class TwitterAutomaticCounting extends Command
+class GetCryptoComment extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = '30minutes:commentcount';
+    protected $signature = 'command:getcryptocomment';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'counting twitter cryptocomment for 30minuits';
+    protected $description = 'counting twitter cryptocomment for 5minuits';
 
     /**
      * Create a new command instance.
@@ -45,22 +45,21 @@ class TwitterAutomaticCounting extends Command
             config('services.twitter.client_id'),
             config('services.twitter.client_secret'),
             config('services.twitter.access_token'),
-            config('services.twitter.access_token_secret'),
-        );
-//      ツイート取得（現在時間から過去30分間のツイート数:関係のないツイートを除くため今回は#を付ける）
+            config('services.twitter.access_token_secret')
+          );
         $keywords = ["#BTC", "#ETH", "#ETC","#LSK","#FCT","#XRP","#XEM","#LTC","#BCH","#MONA","#XLM","#QTUM"];
-        $sincetime = date('Y-m-d_H:i:s', strtotime("now -20 min"));
+        $sincetime = date('Y-m-d_H:i:s', strtotime("now -5 min"));
         $untiltime = date('Y-m-d_H:i:s');
-        
-        $starttime = Carbon::now()->subMinutes(20)->toDateTimeString();
+
+        $starttime = Carbon::now()->subMinutes(5)->toDateTimeString();
         $endtime = Carbon::now()->toDateTimeString();
-        
+
 //      ツイートを取得する通貨の数
         $Crypto_Num= count($keywords);
-        
+
 //      各通貨ごとのコメント数を格納する配列
         $comment_Num = [];
-    
+
         for ($i = 0; $i <= $Crypto_Num-1; $i++) {
             $tweetTimeline = $twitter->get('search/tweets', array(
                 'q' =>  "{$keywords[$i]},since:{$sincetime}_JST until:{$untiltime}_JST",
@@ -68,7 +67,7 @@ class TwitterAutomaticCounting extends Command
                 ));
             $comment_Num[$i] = count($tweetTimeline->statuses);
         };
-        
+
         $user_account_data['BTC'] = $comment_Num[0];
         $user_account_data['ETH'] = $comment_Num[1];
         $user_account_data['ETC'] = $comment_Num[2];
@@ -83,7 +82,7 @@ class TwitterAutomaticCounting extends Command
         $user_account_data['QTUM'] = $comment_Num[11];
         $user_account_data['search_starttime'] = $starttime;
         $user_account_data['search_endtime'] = $endtime;
-        
+
         $crypto_comment = new CryptoComment;
         $crypto_comment->create($user_account_data);
     }

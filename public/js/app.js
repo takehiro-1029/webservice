@@ -1907,12 +1907,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: [],
   data: function data() {
     return {
       btc: [],
       updatetime: '',
+      isActive_hour: true,
+      isActive_day: false,
+      isActive_week: false,
+      isActive_readdone: true,
       cryptodetail: [{
         name: "BTC",
         currentprice: 0,
@@ -1966,9 +1987,20 @@ __webpack_require__.r(__webpack_exports__);
       cryptoselected: ["BTC", "ETH", "ETC", "LSK", "FCT", "XRP", "XEM", "LTC", "BCH", "MONA", "XLM", "QTUM"]
     };
   },
-  created: function created() {
+  mounted: function mounted() {
     var _this = this;
 
+    this.isActive_readdone = false;
+    axios.get('/api/hourcomment').then(function (res) {
+      for (var i = 0; i < Object.keys(res.data.hourcomment).length; i++) {
+        _this.$set(_this.cryptodetail[i], 'commentnum', res.data.hourcomment[_this.cryptodetail[i].name]);
+      }
+
+      ;
+      _this.updatetime = res.data.searchendtime.search_endtime;
+    })["catch"](function (error) {
+      return console.log(error);
+    });
     axios.get('/api/coincheck').then(function (res) {
       for (var i = 0; i < res.data.current_price.length; i++) {
         _this.$set(_this.cryptodetail[i], 'currentprice', res.data.current_price[i]);
@@ -1976,16 +2008,7 @@ __webpack_require__.r(__webpack_exports__);
 
       ;
       _this.btc = res.data.btc_rate;
-    })["catch"](function (error) {
-      return console.log(error);
-    });
-    axios.get('/api/weekcomment').then(function (res) {
-      for (var i = 0; i < Object.keys(res.data.weekcomment).length; i++) {
-        _this.$set(_this.cryptodetail[i], 'commentnum', res.data.weekcomment[_this.cryptodetail[i].name]);
-      }
-
-      ;
-      _this.updatetime = res.data.searchendtime.search_endtime;
+      _this.isActive_readdone = true;
     })["catch"](function (error) {
       return console.log(error);
     });
@@ -2006,6 +2029,7 @@ __webpack_require__.r(__webpack_exports__);
     hourcomment: function hourcomment() {
       var _this2 = this;
 
+      this.isActive_readdone = false;
       axios.get('/api/hourcomment').then(function (res) {
         for (var i = 0; i < Object.keys(res.data.hourcomment).length; i++) {
           _this2.$set(_this2.cryptodetail[i], 'commentnum', res.data.hourcomment[_this2.cryptodetail[i].name]);
@@ -2013,6 +2037,10 @@ __webpack_require__.r(__webpack_exports__);
 
         ;
         _this2.updatetime = res.data.searchendtime.search_endtime;
+        _this2.isActive_hour = true;
+        _this2.isActive_day = false;
+        _this2.isActive_week = false;
+        _this2.isActive_readdone = true;
       })["catch"](function (error) {
         return console.log(error);
       });
@@ -2020,6 +2048,7 @@ __webpack_require__.r(__webpack_exports__);
     daycomment: function daycomment() {
       var _this3 = this;
 
+      this.isActive_readdone = false;
       axios.get('/api/daycomment').then(function (res) {
         for (var i = 0; i < Object.keys(res.data.daycomment).length; i++) {
           _this3.$set(_this3.cryptodetail[i], 'commentnum', res.data.daycomment[_this3.cryptodetail[i].name]);
@@ -2027,6 +2056,10 @@ __webpack_require__.r(__webpack_exports__);
 
         ;
         _this3.updatetime = res.data.searchendtime.search_endtime;
+        _this3.isActive_hour = false;
+        _this3.isActive_day = true;
+        _this3.isActive_week = false;
+        _this3.isActive_readdone = true;
       })["catch"](function (error) {
         return console.log(error);
       });
@@ -2034,6 +2067,7 @@ __webpack_require__.r(__webpack_exports__);
     weekcomment: function weekcomment() {
       var _this4 = this;
 
+      this.isActive_readdone = false;
       axios.get('/api/weekcomment').then(function (res) {
         for (var i = 0; i < Object.keys(res.data.weekcomment).length; i++) {
           _this4.$set(_this4.cryptodetail[i], 'commentnum', res.data.weekcomment[_this4.cryptodetail[i].name]);
@@ -2041,6 +2075,10 @@ __webpack_require__.r(__webpack_exports__);
 
         ;
         _this4.updatetime = res.data.searchendtime.search_endtime;
+        _this4.isActive_hour = false;
+        _this4.isActive_day = false;
+        _this4.isActive_week = true;
+        _this4.isActive_readdone = true;
       })["catch"](function (error) {
         return console.log(error);
       });
@@ -2087,13 +2125,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['user_nofollowing_account'],
   data: function data() {
     return {
       follow_user: this.user_nofollowing_account,
       message: null,
-      processing: false
+      processing: false,
+      isActive: true
     };
   },
   computed: {},
@@ -2101,6 +2166,7 @@ __webpack_require__.r(__webpack_exports__);
     user_follow: function user_follow(index) {
       var _this = this;
 
+      this.isActive = false;
       this.processing = true;
       axios.post('/api/follow', {
         action: this.user_nofollowing_account[index].screen_name
@@ -2110,9 +2176,10 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.user_nofollowing_account.splice(index, 1);
 
+        _this.isActive = true;
         setTimeout(function () {
           _this.message = null;
-        }, 2000);
+        }, 3000);
         _this.processing = false;
       })["catch"](function (error) {
         return console.log(error);
@@ -2121,14 +2188,16 @@ __webpack_require__.r(__webpack_exports__);
     user_reload: function user_reload() {
       var _this2 = this;
 
+      this.isActive = false;
       this.processing = true;
       axios.get('/api/reload').then(function (res) {
         _this2.follow_user = res.data.user_nofollowing_account;
         _this2.user_nofollowing_account = res.data.user_nofollowing_account;
         _this2.message = res.data.message;
+        _this2.isActive = true;
         setTimeout(function () {
           _this2.message = null;
-        }, 2000);
+        }, 3000);
         _this2.processing = false;
       })["catch"](function (error) {
         return console.log(error);
@@ -2139,14 +2208,18 @@ __webpack_require__.r(__webpack_exports__);
 
       var auto_id = [];
 
-      for (var i = 0, l = this.follow_user.length; i < l; i++) {
-        console.log(this.follow_user[i].screen_name);
-        auto_id[i] = this.follow_user[i].screen_name;
+      try {
+        for (var i = 0, l = this.follow_user.length; i < l; i++) {
+          // console.log((this.follow_user[i].screen_name));
+          auto_id[i] = this.follow_user[i].screen_name;
+        }
+
+        ;
+      } catch (e) {// console.log(e);
       }
 
-      ;
-
       if (auto_id.length > 0) {
+        this.isActive = false;
         this.processing = true;
         axios.post('/api/autofollow', {
           action: auto_id
@@ -2155,13 +2228,19 @@ __webpack_require__.r(__webpack_exports__);
           _this3.message = res.data.message;
           _this3.user_nofollowing_account = [];
           _this3.follow_user = [];
+          _this3.isActive = true;
           setTimeout(function () {
             _this3.message = null;
-          }, 2000);
+          }, 3000);
           _this3.processing = false;
         })["catch"](function (error) {
           return console.log(error);
         });
+      } else {
+        this.message = "フォローできるユーザーがいません。";
+        setTimeout(function () {
+          _this3.message = null;
+        }, 3000);
       }
     }
   }
@@ -37539,141 +37618,160 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "p-rank-box__header" }, [
-      _c("div", { staticClass: "p-rank-box__tit" }, [
-        _vm._v("仮想通貨トレンドランキング")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "p-rank-box__update" }, [
-        _vm._v("更新日時:" + _vm._s(_vm.updatetime))
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "p-rank-box__update" }, [
-        _vm._v("ビットコイン最高価格:" + _vm._s(_vm.btc.high) + "円")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "p-rank-box__update" }, [
-        _vm._v("ビットコイン最低価格:" + _vm._s(_vm.btc.low) + "円")
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "p-rank-box__buttons" }, [
-      _c("ul", [
-        _c(
-          "li",
-          {
-            staticClass: "p-rank-box__buttons-btn active",
-            on: { click: _vm.hourcomment }
-          },
-          [_vm._v("過去1時間")]
-        ),
-        _vm._v(" "),
-        _c(
-          "li",
-          {
-            staticClass: "p-rank-box__buttons-btn",
-            on: { click: _vm.daycomment }
-          },
-          [_vm._v("過去1日")]
-        ),
-        _vm._v(" "),
-        _c(
-          "li",
-          {
-            staticClass: "p-rank-box__buttons-btn",
-            on: { click: _vm.weekcomment }
-          },
-          [_vm._v("過去1週間")]
-        )
-      ])
-    ]),
-    _vm._v(" "),
+  return _c("div", { staticClass: "l-main__inner" }, [
     _c(
       "div",
-      _vm._l(_vm.cryptocheck, function(value) {
-        return _c("label", { staticClass: "p-rank-box__select-chk" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.cryptoselected,
-                expression: "cryptoselected"
-              }
-            ],
-            attrs: { type: "checkbox" },
-            domProps: {
-              value: value,
-              checked: Array.isArray(_vm.cryptoselected)
-                ? _vm._i(_vm.cryptoselected, value) > -1
-                : _vm.cryptoselected
-            },
-            on: {
-              change: function($event) {
-                var $$a = _vm.cryptoselected,
-                  $$el = $event.target,
-                  $$c = $$el.checked ? true : false
-                if (Array.isArray($$a)) {
-                  var $$v = value,
-                    $$i = _vm._i($$a, $$v)
-                  if ($$el.checked) {
-                    $$i < 0 && (_vm.cryptoselected = $$a.concat([$$v]))
-                  } else {
-                    $$i > -1 &&
-                      (_vm.cryptoselected = $$a
-                        .slice(0, $$i)
-                        .concat($$a.slice($$i + 1)))
-                  }
-                } else {
-                  _vm.cryptoselected = $$c
-                }
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("span", [_vm._v(_vm._s(value))])
-        ])
-      }),
-      0
+      {
+        staticClass: "p-wrapper",
+        class: { "is-visible": _vm.isActive_readdone }
+      },
+      [_vm._m(0)]
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "p-rank-box__table" }, [
-      _c("table", [
-        _vm._m(0),
+    _c("div", { staticClass: "p-rank-box" }, [
+      _c("div", { staticClass: "p-rank-box__title" }, [
+        _vm._v("トレンドランキング")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "p-rank-box__info" }, [
+        _c("div", { staticClass: "p-rank-box__info__price" }, [
+          _vm._v("BTC過去24時間価格")
+        ]),
         _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.sortedItemsByAmount, function(crypto, index) {
-            return _c("tr", [
-              _c("td", { staticClass: "p-rank-box__table-no" }, [
-                _vm._v(_vm._s(index + 1))
-              ]),
-              _vm._v(" "),
-              _c("td", { staticClass: "p-rank-box__table-name" }, [
-                _c(
-                  "a",
-                  {
-                    attrs: {
-                      href: "https://twitter.com/search?q=%23" + crypto.name,
-                      target: "_blank"
+        _c("div", { staticClass: "p-rank-box__info__price" }, [
+          _vm._v("最高:" + _vm._s(_vm.btc.high) + "円")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "p-rank-box__info__price" }, [
+          _vm._v("最低:" + _vm._s(_vm.btc.low) + "円")
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "p-rank-box__select" },
+        _vm._l(_vm.cryptocheck, function(value) {
+          return _c("label", { staticClass: "p-rank-box__select__check" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.cryptoselected,
+                  expression: "cryptoselected"
+                }
+              ],
+              attrs: { type: "checkbox" },
+              domProps: {
+                value: value,
+                checked: Array.isArray(_vm.cryptoselected)
+                  ? _vm._i(_vm.cryptoselected, value) > -1
+                  : _vm.cryptoselected
+              },
+              on: {
+                change: function($event) {
+                  var $$a = _vm.cryptoselected,
+                    $$el = $event.target,
+                    $$c = $$el.checked ? true : false
+                  if (Array.isArray($$a)) {
+                    var $$v = value,
+                      $$i = _vm._i($$a, $$v)
+                    if ($$el.checked) {
+                      $$i < 0 && (_vm.cryptoselected = $$a.concat([$$v]))
+                    } else {
+                      $$i > -1 &&
+                        (_vm.cryptoselected = $$a
+                          .slice(0, $$i)
+                          .concat($$a.slice($$i + 1)))
                     }
-                  },
-                  [_vm._v(_vm._s(crypto.name))]
-                )
-              ]),
-              _vm._v(" "),
-              _c("td", { staticClass: "p-rank-box__table-tweets" }, [
-                _vm._v(_vm._s(crypto.commentnum))
-              ]),
-              _vm._v(" "),
-              _c("td", { staticClass: "p-rank-box__table-price" }, [
-                _vm._v(_vm._s(crypto.currentprice))
+                  } else {
+                    _vm.cryptoselected = $$c
+                  }
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("span", [_vm._v(_vm._s(value))])
+          ])
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "p-rank-box__buttons" }, [
+        _c("ul", [
+          _c(
+            "li",
+            {
+              staticClass: "p-rank-box__buttons__btn",
+              class: { "is-active": _vm.isActive_hour },
+              on: { click: _vm.hourcomment }
+            },
+            [_vm._v("過去1時間")]
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            {
+              staticClass: "p-rank-box__buttons__btn",
+              class: { "is-active": _vm.isActive_day },
+              on: { click: _vm.daycomment }
+            },
+            [_vm._v("過去1日")]
+          ),
+          _vm._v(" "),
+          _c(
+            "li",
+            {
+              staticClass: "p-rank-box__buttons__btn",
+              class: { "is-active": _vm.isActive_week },
+              on: { click: _vm.weekcomment }
+            },
+            [_vm._v("過去1週間")]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "p-rank-box__table" }, [
+        _c("div", { staticClass: "p-rank-box__table__update" }, [
+          _vm._v("更新日時:" + _vm._s(_vm.updatetime))
+        ]),
+        _vm._v(" "),
+        _c("table", [
+          _vm._m(1),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.sortedItemsByAmount, function(crypto, index) {
+              return _c("tr", [
+                _c("td", { staticClass: "p-rank-box__table__no" }, [
+                  _vm._v(_vm._s(index + 1))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "p-rank-box__table__name" }, [
+                  _c(
+                    "a",
+                    {
+                      attrs: {
+                        href: "https://twitter.com/search?q=%23" + crypto.name,
+                        target: "_blank"
+                      }
+                    },
+                    [_vm._v(_vm._s(crypto.name))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "p-rank-box__table__tweets" }, [
+                  _vm._v(_vm._s(crypto.commentnum))
+                ]),
+                _vm._v(" "),
+                _c("td", { staticClass: "p-rank-box__table__price" }, [
+                  _vm._v(_vm._s(crypto.currentprice))
+                ])
               ])
-            ])
-          }),
-          0
-        )
+            }),
+            0
+          )
+        ])
       ])
     ])
   ])
@@ -37683,17 +37781,39 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "p-wrapper_balls-guruguru" }, [
+      _c("span", { staticClass: "c-ball c-ball-1" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-ball c-ball-2" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-ball c-ball-3" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-ball c-ball-4" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-ball c-ball-5" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-ball c-ball-6" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-ball c-ball-7" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-ball c-ball-8" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", { staticClass: "p-rank-box__table-no" }, [_vm._v("No.")]),
+        _c("th", { staticClass: "p-rank-box__table__no" }, [_vm._v("No.")]),
         _vm._v(" "),
-        _c("th", { staticClass: "p-rank-box__table-name" }, [_vm._v("銘柄")]),
+        _c("th", { staticClass: "p-rank-box__table__name" }, [_vm._v("銘柄")]),
         _vm._v(" "),
-        _c("th", { staticClass: "p-rank-box__table-tweets" }, [
+        _c("th", { staticClass: "p-rank-box__table__tweets" }, [
           _vm._v("ツイート数")
         ]),
         _vm._v(" "),
-        _c("th", { staticClass: "p-rank-box__table-price" }, [
+        _c("th", { staticClass: "p-rank-box__table__price" }, [
           _vm._v("現在価格（円）")
         ])
       ])
@@ -37721,22 +37841,29 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "container" },
-    [
+  return _c("div", { staticClass: "l-main__inner" }, [
+    _c(
+      "div",
+      { staticClass: "p-wrapper", class: { "is-visible": _vm.isActive } },
+      [_vm._m(0)]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "p-tw-list" }, [
+      _c("div", { staticClass: "p-tw-list__title" }, [
+        _vm._v("Twitterアカウント")
+      ]),
+      _vm._v(" "),
       _vm.message
-        ? _c("div", { staticClass: "message" }, [
-            _c("p", { staticClass: "alert alert-success" }, [
-              _vm._v(_vm._s(_vm.message))
-            ])
+        ? _c("div", { staticClass: "p-tw-list__message" }, [
+            _vm._v("\n          " + _vm._s(_vm.message) + "\n      ")
           ])
         : _vm._e(),
       _vm._v(" "),
-      _c("div", [
+      _c("div", { staticClass: "p-tw-list__btn c-btn" }, [
         _c(
           "button",
           {
+            staticClass: "c-btn__autofollow",
             attrs: { type: "button", disabled: _vm.processing },
             on: { click: _vm.auto_follow }
           },
@@ -37744,52 +37871,108 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _c("div", [
+      _c(
+        "div",
+        { staticClass: "p-tw-list__box" },
+        _vm._l(_vm.follow_user, function(user, index) {
+          return _c(
+            "div",
+            { key: user.id, staticClass: "p-tw-list__box__detail" },
+            [
+              _c("div", { staticClass: "p-tw-list__box__detail__btn c-btn" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "c-btn__userfollow",
+                    attrs: { type: "button", disabled: _vm.processing },
+                    on: {
+                      click: function($event) {
+                        return _vm.user_follow(index)
+                      }
+                    }
+                  },
+                  [_vm._v("フォロー")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "p-tw-list__box__detail__name" }, [
+                _vm._v(_vm._s(user.user_name))
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "p-tw-list__box__detail__sname" }, [
+                _vm._v("@" + _vm._s(user.screen_name))
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "p-tw-list__box__detail__desc" }, [
+                _vm._v(_vm._s(user.description))
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "p-tw-list__box__detail__count" }, [
+                _c(
+                  "p",
+                  { staticClass: "p-tw-list__box__detail__count-followers" },
+                  [_vm._v(_vm._s(user.follows_count) + "フォロワー")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "p",
+                  { staticClass: "p-tw-list__box__detail__count-friends" },
+                  [_vm._v(_vm._s(user.friends_count) + "フォロー")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "p-tw-list__box__detail__text" }, [
+                _c("p", [_vm._v("最新ツイート")]),
+                _vm._v(
+                  "\n                " +
+                    _vm._s(user.recent_tweet) +
+                    "\n              "
+                )
+              ])
+            ]
+          )
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "p-tw-list__btn c-btn" }, [
         _c(
           "button",
           {
+            staticClass: "c-btn__autofollow",
             attrs: { type: "button", disabled: _vm.processing },
             on: { click: _vm.user_reload }
           },
           [_vm._v("ユーザー情報再取得")]
         )
-      ]),
-      _vm._v(" "),
-      _vm._l(_vm.follow_user, function(user, index) {
-        return _c("div", { key: user.id }, [
-          _c(
-            "button",
-            {
-              attrs: { type: "button", disabled: _vm.processing },
-              on: {
-                click: function($event) {
-                  return _vm.user_follow(index)
-                }
-              }
-            },
-            [_vm._v("フォロー")]
-          ),
-          _vm._v(" "),
-          _c("div", [_vm._v(_vm._s(user.account_id))]),
-          _vm._v(" "),
-          _c("div", [_vm._v(_vm._s(user.user_name))]),
-          _vm._v(" "),
-          _c("div", [_vm._v(_vm._s(user.screen_name))]),
-          _vm._v(" "),
-          _c("div", [_vm._v(_vm._s(user.description))]),
-          _vm._v(" "),
-          _c("div", [_vm._v(_vm._s(user.follows_count) + "フォロワー")]),
-          _vm._v(" "),
-          _c("div", [_vm._v(_vm._s(user.friends_count) + "フォロー")]),
-          _vm._v(" "),
-          _c("div", [_vm._v(_vm._s(user.recent_tweet))])
-        ])
-      })
-    ],
-    2
-  )
+      ])
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "p-wrapper_balls-guruguru" }, [
+      _c("span", { staticClass: "c-ball c-ball-1" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-ball c-ball-2" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-ball c-ball-3" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-ball c-ball-4" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-ball c-ball-5" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-ball c-ball-6" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-ball c-ball-7" }),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-ball c-ball-8" })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -49989,6 +50172,10 @@ Vue.component('cryptorank-component', __webpack_require__(/*! ./components/Crypt
 
 var app = new Vue({
   el: '#app'
+}); // フラッシュメッセージを5秒後に消す処理
+
+$(function () {
+  $('.js-flash-message').fadeOut(5000);
 });
 
 /***/ }),
@@ -50176,10 +50363,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/sass/app.scss":
-/*!*********************************!*\
-  !*** ./resources/sass/app.scss ***!
-  \*********************************/
+/***/ "./resources/sass/style.scss":
+/*!***********************************!*\
+  !*** ./resources/sass/style.scss ***!
+  \***********************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -50188,14 +50375,14 @@ __webpack_require__.r(__webpack_exports__);
 /***/ }),
 
 /***/ 0:
-/*!*************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/sass/app.scss ***!
-  \*************************************************************/
+/*!***************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/sass/style.scss ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! /mnt/c/xampp/htdocs/CryptoTrend_system/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /mnt/c/xampp/htdocs/CryptoTrend_system/resources/sass/app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! /mnt/c/xampp/htdocs/CryptoTrend_system/resources/sass/style.scss */"./resources/sass/style.scss");
 
 
 /***/ })

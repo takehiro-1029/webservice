@@ -13,7 +13,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\TwitterAutomaticCounting::class
+        Commands\GetCryptoComment::class,
+        Commands\GetTwitterAccount::class,
+        Commands\UpdateTwitterUserdata::class,
     ];
 
     /**
@@ -24,7 +26,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('30minutes:commentcount')->everyMinute();
+         $schedule->command('command:getcryptocomment')->everyMinute();
+         $schedule->command('command:getnewaccount')->everyMinute();
+         $schedule->command('command:updateaccount')->everyMinute();
     }
 
     /**
