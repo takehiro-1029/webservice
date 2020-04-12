@@ -16,15 +16,14 @@ class CreateTwitterUsersTable extends Migration
         Schema::create('twitter_users', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedBigInteger('account_id')->unique();
-            $table->string('user_name')->default("");
-            $table->string('screen_name')->default("");
-            $table->string('profile_image_url')->default("");
-            $table->string('description')->default("");
-            $table->unsignedInteger('follows_count')->default(0);
-            $table->unsignedInteger('friends_count')->default(0);
-            $table->string('recent_tweet')->default(0);
+            $table->string('user_name')->default(1);
+            $table->string('screen_name')->default(1);
+            $table->string('profile_image_url')->default(1);
+            $table->string('description')->default(1);
+            $table->unsignedInteger('follows_count')->default(1);
+            $table->unsignedInteger('friends_count')->default(1);
+            $table->string('recent_tweet')->default(1);
             $table->boolean('day_update_flg')->default(false);
-            $table->boolean('delete_flg')->default(false);
             $table->timestamps();
         });
     }

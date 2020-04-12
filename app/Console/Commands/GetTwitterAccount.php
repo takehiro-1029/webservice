@@ -71,7 +71,7 @@ class GetTwitterAccount extends Command
       for ($i = 1; $i <= $getPageNum; $i++) {
           for ($j = 0; $j <= 19; $j++) {
             if(isset($user_data[$i][$j])){
-              array_push($twitter_id,$user_data[$i][$j]->id);
+              array_push($twitter_id,$user_data[$i][$j]->id_str);
             }
           };
       };
@@ -92,7 +92,7 @@ class GetTwitterAccount extends Command
       for ($i = 0; $i < $getUsersNum; $i++) {
             $twitter_id[$i] = array('account_id' =>$twitter_id[$i],'created_at' =>$now,'updated_at' =>$now);
       };
-      var_dump($twitter_id);
+//      var_dump($twitter_id);
       // dd ($twitter_id);
 //      twitter_userテーブルにaccount_id,create_at,update_atを追加
       $twitter_user = new TwitterUser;

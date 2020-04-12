@@ -66,7 +66,7 @@ class UpdateTwitterUserdata extends Command
           $now = Carbon::now();
 
           if(!empty($timeline) && is_array($timeline)){
-              $user_account_data['account_id'] = $timeline[0]->user->id;
+              $user_account_data['account_id'] = $timeline[0]->user->id_str;
               $user_account_data['user_name'] = $timeline[0]->user->name;
               $user_account_data['screen_name'] = $timeline[0]->user->screen_name;
               $user_account_data['profile_image_url'] = $timeline[0]->user->profile_image_url;

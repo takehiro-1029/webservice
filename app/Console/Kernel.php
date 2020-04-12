@@ -26,9 +26,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('command:getcryptocomment')->everyMinute();
-         $schedule->command('command:getnewaccount')->everyMinute();
-         $schedule->command('command:updateaccount')->everyMinute();
+         $schedule->command('command:getcryptocomment')->everyFiveMinutes();
+         $schedule->command('command:getnewaccount')->dailyAt('08:00');
+         $schedule->command('command:updateaccount')->dailyAt('02:00');
     }
 
     /**
