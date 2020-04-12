@@ -40,7 +40,7 @@ class GetTwitterAccount extends Command
      */
     public function handle()
     {
-      set_time_limit(180);
+      set_time_limit(0);
 //      twitterにアクセスする
       $twitter = new TwitterOAuth(
           config('services.twitter.client_id'),
@@ -67,7 +67,7 @@ class GetTwitterAccount extends Command
 
 //      $user_dataからtwitter_idを取り出して格納する配列
       $twitter_id =[];
-//      ループで$user_dataからtwitter_idを取り出して$twitter_idに格納
+//      ループで$user_dataからtwitterのidを取り出して$twitter_idに格納
       for ($i = 1; $i <= $getPageNum; $i++) {
           for ($j = 0; $j <= 19; $j++) {
             if(isset($user_data[$i][$j])){
@@ -75,26 +75,28 @@ class GetTwitterAccount extends Command
             }
           };
       };
-
+        
+//        idを取り出せないユーザーもいるためユーザー数を再確認
       $getUsersNum = count($twitter_id);
+//        DBに格納済みのユーザーは除外する
       for ($i = 0; $i < $getUsersNum; $i++) {
           $db_exist_judge = json_decode(TwitterUser::where('account_id', '=', $twitter_id[$i])->get());
           if(!empty($db_exist_judge)){
             unset($twitter_id[$i]);
           };
       };
+//        除外したユーザーがいるので配列のキー番号を整える
       $twitter_id = array_values($twitter_id);
 
       $getUsersNum = count($twitter_id);
 
 //      データ追加用にキーを指定
       $now = Carbon::now();
+
       for ($i = 0; $i < $getUsersNum; $i++) {
             $twitter_id[$i] = array('account_id' =>$twitter_id[$i],'created_at' =>$now,'updated_at' =>$now);
       };
-//      var_dump($twitter_id);
-      // dd ($twitter_id);
-//      twitter_userテーブルにaccount_id,create_at,update_atを追加
+
       $twitter_user = new TwitterUser;
       $twitter_user->insert($twitter_id);
     }

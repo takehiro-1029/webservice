@@ -17,13 +17,3 @@ Route::get('twitter', 'TwitterController@twitter')->name('cryptotrend.usershow')
 Route::get('twitter/callback','TwitterController@twitterCallback')->middleware('check');
 Route::get('show', 'TwitterController@FollowedShow')->middleware('check');
 Auth::routes();
-
-
-Route::get('getTimeline','TwitterController@getTimeline');
-Route::get('gettwitterComment','TwitterController@gettwitterComment');
-Route::get('getCryptoComment','TwitterController@getCryptoComment');
-
-
-//Route::get('/', function () {return view('welcome');});
-// Route::get('auth', 'Auth\Home@redirectToProvider');
-// Route::get('/home', 'HomeController@index')->name('home');
