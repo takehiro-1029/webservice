@@ -1,5 +1,5 @@
 .l-main {
-  width: 1000px;
+  width: $site-width;
   margin: 50px auto 50px;
   @include mq(md) {
     width: 90%;
@@ -17,37 +17,3 @@
     }
   }
 }
-
-
-
-// .l-main--center {
-//   display: -webkit-box;
-//   display: -ms-flexbox;
-//   display: flex;
-//   -webkit-box-pack: center;
-//       -ms-flex-pack: center;
-//           justify-content: center;
-//   width: 100%;
-// }
-//
-// .l-main--center .l-main__inner {
-//   width: 350px;
-// }
-//
-// @media screen and (max-width: 768px) {
-//   .l-main--center .l-main__inner {
-//     width: 100%;
-//   }
-// }
-//
-// .l-main--index {
-//   display: inline;
-//   width: 100%;
-//   padding: 100px 0;
-// }
-//
-// @media screen and (max-width: 768px) {
-//   .l-main--index {
-//     padding: 50px 0;
-//   }
-// }

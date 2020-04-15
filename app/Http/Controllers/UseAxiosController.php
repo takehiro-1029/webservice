@@ -184,7 +184,7 @@ class UseAxiosController extends Controller
     //      users_follow_listテーブルにデータを格納するため配列を整える
             $now = Carbon::now();
             for ($i = 0; $i < $twitter_user_Num; $i++) {
-                $followuserdata[$i]['twitter_id'] = $twitter_user->where('account_id',$follow[$i]->id)->value('id');
+                $followuserdata[$i]['twitter_id'] = $twitter_user->where('account_id',$follow[$i]->id_str)->value('id');
                 $followuserdata[$i]['user_id'] = Auth::id();
                 $followuserdata[$i]['follow_details'] = $follow[$i]->connections[0];
                 $followuserdata[$i]['created_at'] = $now;

@@ -1,11 +1,11 @@
 .l-footer {
-  width: 1000px;
+  width: $site-width;
   margin: 0 auto;
   text-align: center;
   font-size: 1rem;
-  background: #fff;
   line-height: 40px;
-  box-shadow: 0 -10px 10px 0 rgba(237, 173, 11, 0.2);
+  -webkit-box-shadow: 0 -10px 10px 0 rgba(237, 173, 11, 0.2);
+          box-shadow: 0 -10px 10px 0 rgba(237, 173, 11, 0.2);
   &__copyright {
     display: block;
     padding: 5px 0;

@@ -15,8 +15,6 @@
     }
   }
   &__info{
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
     line-height: 30px;
     text-align: center;
@@ -98,12 +96,8 @@
       }
     }
     & ul {
-      display: -webkit-box;
-      display: -ms-flexbox;
       display: flex;
-      -webkit-box-pack: justify;
-          -ms-flex-pack: justify;
-              justify-content: space-between;
+      justify-content: space-between;
     }
   }
   &__table{

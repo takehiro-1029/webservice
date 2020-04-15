@@ -1,8 +1,6 @@
 .p-nav {
   font-size: 1.2rem;
   line-height: 60px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   text-align: center;
   @include mq() {
