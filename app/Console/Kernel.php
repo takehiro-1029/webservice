@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         Commands\GetCryptoComment::class,
         Commands\GetTwitterAccount::class,
         Commands\UpdateTwitterUserdata::class,
+        Commands\TwitterAutoFollow::class,
     ];
 
     /**
@@ -29,6 +30,7 @@ class Kernel extends ConsoleKernel
          $schedule->command('command:getcryptocomment')->everyFiveMinutes();
          $schedule->command('command:getnewaccount')->dailyAt('02:20');
          $schedule->command('command:updateaccount')->dailyAt('04:20');
+         $schedule->command('command:twitterautofollow')->cron('*/20 * * * * *');
     }
 
     /**

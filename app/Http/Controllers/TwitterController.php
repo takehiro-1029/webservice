@@ -96,89 +96,18 @@ class TwitterController extends Controller
             return redirect('/mypage')->with('flash_message', 'API制限中のためしばらくお待ちください。');
         };
         
-//        DBからツイッター接続するためのトークンを取得
-        $user_token = Auth::user()->where('id',Auth::id())->first();
-        $oauth_token = $user_token->oauth_token;
-        $oauth_token_secret = $user_token->oauth_token_secret;
-
-//        access_tokenを用いればユーザー情報へアクセスできるため、それを用いてTwitterOAuthをinstance化
-        $twitter_login_user = new TwitterOAuth(
-            config('services.twitter.client_id'),
-            config('services.twitter.client_secret'),
-            $oauth_token,
-            $oauth_token_secret
-        );
-
-//      ユーザーのフォローリストから未フォローのツイッターアカウント15件取得
-        $user_follow_list = new UserFollowList;
+//        DBからTwitterユーザーデータをすべて取得（鍵垢などでデータが得られていないものは外す）
         $twitter_user = new TwitterUser;
 
-        $user_nofollowing_account = $user_follow_list->join('twitter_users', 'twitter_users.id', '=', 'users_follow_list.twitter_id')->where('user_id',Auth::id())->where('user_name','!=', 1)->where(function($q){
-            $q->where('follow_details','none')
-                ->orWhere('follow_details','followed_by');
-        })->select('twitter_id')->take(15)->get()->toArray();
-
-
-//      15件ある場合はアカウント情報を取得してビューに渡す
-        if(count($user_nofollowing_account) === 15){
-            for ($i = 0; $i < 15; $i++) {
-                $user_nofollowing_account[$i] = $twitter_user->where('id',$user_nofollowing_account[$i])->first()->toArray();
-            };
-//      15件未満の場合はフォロー有無をチェックして15件になるようにする
-        }else{
-    //      ユーザーが最後にフォロー検索したtwitter_usersテーブルのidをusersテーブルのfollowsearch_numberから取得
-            $last_serach_num = Auth::user()->where('id',Auth::id())->value('followsearch_number');
-    //      twitter_usersテーブルからidを取得(最後に検索したidより大きいものを50件取得)
-            $twitter_account_id = $twitter_user->orderBy('id', 'asc')->where('id','>',$last_serach_num)->select('account_id')->take(50)->get()->toArray();
-
-    //      連想配列から配列へ変換
-            $twitter_account_id = array_column($twitter_account_id, 'account_id');
-    //      配列を文字列に変更して,を付ける
-            $twitter_account_id = implode(',', $twitter_account_id);
-    //      それぞれのユーザーのフォロー有無を確認して$followに格納
-            $follow = $twitter_login_user->get('friendships/lookup', array(
-                'user_id' => $twitter_account_id,
-            ));
-
-            // dd($follow);
-
-            if (!is_array($follow)){
-                return redirect('/mypage')->with('flash_message', 'API制限中のためしばらくお待ちください。');
-            };
-
-    //      フォロー有無を確認できたユーザーの数（鍵アカ等はデータ取得できないため数を再確認）
-            $twitter_user_Num= count($follow);
-
-    //      users_follow_listテーブルにデータを格納するため配列を整える
-            $now = Carbon::now();
-            for ($i = 0; $i < $twitter_user_Num; $i++) {
-                $followuserdata[$i]['twitter_id'] = $twitter_user->where('account_id',$follow[$i]->id_str)->value('id');
-                $followuserdata[$i]['user_id'] = Auth::id();
-                $followuserdata[$i]['follow_details'] = $follow[$i]->connections[0];
-                $followuserdata[$i]['created_at'] = $now;
-                $followuserdata[$i]['updated_at'] = $now;
-            };
-    //      users_follow_listテーブルに$followuserdataを格納
-            $user_follow_list = new UserFollowList;
-            $user_follow_list->insert($followuserdata);
-
-    //      次回検索のため最後にフォロー有無を確認したidをusersテーブルに入れておく
-            Auth::user()->where('id',Auth::id())->update(['followsearch_number' => $followuserdata[$twitter_user_Num-1]['twitter_id']]);
-
-    //      再度、ユーザーのフォローリストから未フォローのツイッターアカウント15件取得
-            $user_nofollowing_account = $user_follow_list->join('twitter_users', 'twitter_users.id', '=', 'users_follow_list.twitter_id')->where('user_id',Auth::id())->where('user_name','!=', 1)->where(function($q){
-            $q->where('follow_details','none')
-                ->orWhere('follow_details','followed_by');
-            })->select('twitter_id')->take(15)->get()->toArray();
-
-            $user_nofollowing_account_num = count($user_nofollowing_account);
-
-            for ($i = 0; $i < $user_nofollowing_account_num; $i++) {
-                $user_nofollowing_account[$i] = $twitter_user->where('id',$user_nofollowing_account[$i])->first()->toArray();
-            };
-        };
-
-        return view('twitter', ['user_nofollowing_account' => $user_nofollowing_account]);
+        $user_nofollowing_account = $twitter_user->orderBy('id', 'asc')->where('user_name','!=', 1)->paginate(15);
+        
+//        自動フォロー機能を有効にしているかDBから確認
+        $autofollow_selected = Auth::user()->where('id',Auth::id())->select('autofollow_flg')->first()->autofollow_flg;
+        
+//        DBからユーザーがフォローした数を取得する
+        $follow_num = UserFollowList::where('user_id',Auth::id())->where('follow_details','=', 'following')->count();
+        
+        return view('twitter', ['user_nofollowing_account' => $user_nofollowing_account,'autofollow_selected' => $autofollow_selected,'follow_num' => $follow_num]);
 
     }
 
@@ -218,6 +147,130 @@ class TwitterController extends Controller
     {
         return view('top');
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    public function test()
+    {
+        
+        set_time_limit(0);
+        
+//        userDBからautofollow機能をonにしているユーザーを取り出す
+        $auto_follow_user = User::orderBy('id', 'asc')->where('autofollow_flg', 1)->get()->Toarray();
+        
+//        該当ユーザーがいなければ処理は終了
+        if(empty($auto_follow_user)){
+            var_dump('処理終了');
+            return;  
+        };
+        
+        dump($auto_follow_user);
+        
+//        対象user分ループを回す
+        for ($i = 0; $i < count($auto_follow_user); $i++) {
+            
+            // 対象ユーザーがAPI制限中でないことをDBのapi_limit_timeから確認
+            $now = Carbon::now();
+            if ($now < $auto_follow_user[$i]['api_limit_time']){
+                continue;
+            };
+            
+//            DBからTwitterのアカウントトークンを取得
+            $oauth_token = $auto_follow_user[$i]['oauth_token'];
+            $oauth_token_secret = $auto_follow_user[$i]['oauth_token_secret'];
 
+//            access_tokenを用いてTwitterOAuthをinstance化
+            $twitter_user = new TwitterOAuth(
+                config('services.twitter.client_id'),
+                config('services.twitter.client_secret'),
+                $oauth_token,
+                $oauth_token_secret
+            );
+            
+//            DBからフォローしたいユーザーを10件取り出す
+            $follow_user = TwitterUser::orderBy('id', 'asc')->where('user_name','!=', 1)->where('id','>',$auto_follow_user[$i]['followsearch_number'])->take(10)->get()->Toarray();
+            
+//            フォローしたいユーザーが0の場合は処理をスキップして対象ユーザーのautofollowフラグをfalseにする
+            if(count($follow_user) === 0){
+                User::where('id',$auto_follow_user[$i]['id'])->update(['autofollow_flg' => 0]);
+                continue;
+            };
+            
+            dump($follow_user);
+            
+//            取り出したユーザーをフォローするためにループを回す
+            for ($j = 0; $j < count($follow_user); $j++) {
+                
+                
+//                検索回数がAPI制限にかかってないかの確認
+                $api_limit = $twitter_user->get('application/rate_limit_status', array(
+                        'resources' => 'friendships',
+                ));
 
+//                データが取得できない場合は処理をスキップして対象ユーザーのautofollowフラグをfalseにする
+                if (property_exists($api_limit,'errors')){
+                    
+                    var_dump('errorだお');
+                    User::where('id',$auto_follow_user[$i]['id'])->update(['autofollow_flg' => 0]);
+                    break;
+                };
+
+                $api_limit = json_decode(json_encode($api_limit),true);
+                
+                $api_limit_num = $api_limit['resources']['friendships']['/friendships/lookup']['remaining'];
+                
+                dump($api_limit_num);
+
+                // API制限にかかっている場合、処理をスキップする
+                if($api_limit_num === 0){
+                    var_dump('0になったお');
+                    break;
+                };
+                
+                $follow_name = $follow_user[$j]['screen_name'];
+                
+                dump($follow_name);
+                
+//                フォロー前に二重フォローを防ぐためにユーザーとの関係を再確認
+                $follow = $twitter_user->get('friendships/lookup', array(
+                  'screen_name' => $follow_name,
+                ));
+                
+                dump($follow[0]->connections[0]);
+                
+//                フォローするユーザとの関係がnoneもしくはfollowed_byの場合はフォローを行う
+                if($follow[0]->connections[0] === 'none' || $follow[0]->connections[0] === 'followed_by'){
+                    
+//                    フォローする
+                    $friendship_create = $twitter_user->post('friendships/create',array(
+                           'screen_name' => $follow_name,
+                    ));
+                    
+//                    フォロー制限が掛かっている場合は1hフォローできないようにする
+                    if(!property_exists($friendship_create, 'id')){
+                        
+                        $api_limit_time = $now->addminute(60);
+                        User::where('id',$auto_follow_user[$i]['id'])->update(['api_limit_time' => $api_limit_time]);
+                        break;                  
+                    };       
+                };
+                
+//                DBに重複してデータを入れないように判定
+                $db_exists = UserFollowList::where('user_id',$auto_follow_user[$i]['id'])->where('twitter_id',$follow_user[$j]['id'])->first();
+                
+                if($db_exists === null){   
+                    $twitter_id = array('user_id' => $auto_follow_user[$i]['id'],'twitter_id' => $follow_user[$j]['id'],'follow_details' => 'following','created_at' =>$now,'updated_at' =>$now);
+                    UserFollowList::create($twitter_id);
+                };
+                
+                User::where('id',$auto_follow_user[$i]['id'])->update(['followsearch_number' => $follow_user[$j]['id']]);
+                
+            };
+        };
+    }
 }

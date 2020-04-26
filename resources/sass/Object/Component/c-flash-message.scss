@@ -1,16 +1,3 @@
 .c-flash-message{
-    // position: fixed;
-    // width: 100%;
-    // line-height: 2.5;
-    // text-align: center;
-    // font-size: 1rem;
-    // top: 0;
-    // left: 0;
-    // background-color: #3fdcff8f;
-    // font-weight: bold;
-    // z-index: 1;
-    // @include mq() {
-    //   font-size: 0.8rem;
-    // }
     @extend .p-tw-list__message;
 }

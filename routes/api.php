@@ -19,10 +19,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => 'api'], function() {
   Route::post('/follow', 'UseAxiosController@follow');
-  Route::get('/reload', 'UseAxiosController@reload');
   Route::post('/autofollow', 'UseAxiosController@autofollow');
   Route::get('/coincheck', 'UseAxiosController@coincheck');
   Route::get('/hourcomment', 'UseAxiosController@hourcomment');
   Route::get('/daycomment', 'UseAxiosController@daycomment');
   Route::get('/weekcomment', 'UseAxiosController@weekcomment');
+  Route::get('/usershow', 'UseAxiosController@twitterusershow');
 });

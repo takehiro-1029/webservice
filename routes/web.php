@@ -17,3 +17,4 @@ Route::get('twitter', 'TwitterController@twitter')->name('cryptotrend.usershow')
 Route::get('twitter/callback','TwitterController@twitterCallback')->middleware('check');
 Route::get('show', 'TwitterController@FollowedShow')->middleware('check');
 Auth::routes();
+Route::get('test', 'TwitterController@test');

@@ -2151,49 +2151,139 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['user_nofollowing_account'],
+  props: ['user_nofollowing_account', 'autofollow_selected', 'follow_num'],
   data: function data() {
     return {
-      follow_user: this.user_nofollowing_account,
+      follow_user: this.user_nofollowing_account.data,
       message: null,
       processing: false,
-      isActive: true
+      isActive: true,
+      last_page: this.user_nofollowing_account.last_page,
+      current_page: 1,
+      total_user: this.user_nofollowing_account.total,
+      first_page: 1,
+      auto_selected: this.autofollow_selected,
+      user_follow_num: this.follow_num
     };
   },
-  computed: {},
+  computed: {
+    hasPrev: function hasPrev() {
+      return this.current_page > 1;
+    },
+    hasNext: function hasNext() {
+      return this.current_page < this.last_page;
+    },
+    pages: function pages() {
+      var pages = [];
+
+      if (4 < this.current_page && this.current_page < this.last_page - 3) {
+        for (var i = this.current_page - 4; i <= this.current_page + 4; i++) {
+          pages.push(i);
+        }
+      }
+
+      if (4 >= this.current_page) {
+        for (var _i = this.first_page; _i <= this.first_page + 8; _i++) {
+          pages.push(_i);
+        }
+      }
+
+      if (this.last_page - 3 <= this.current_page) {
+        for (var _i2 = this.last_page - 8; _i2 <= this.last_page; _i2++) {
+          pages.push(_i2);
+        }
+      }
+
+      return pages;
+    },
+    active_usernum: function active_usernum() {
+      var active_usernum = {};
+
+      if (this.current_page !== this.last_page) {
+        active_usernum.start = this.current_page * 15 - 14;
+        active_usernum.end = this.current_page * 15;
+      } else if (this.current_page === this.last_page) {
+        active_usernum.start = this.current_page * 15 - 14;
+        active_usernum.end = this.total_user;
+      }
+
+      return active_usernum;
+    }
+  },
   methods: {
-    user_follow: function user_follow(index) {
+    getItems: function getItems() {
       var _this = this;
 
-      this.isActive = false;
-      this.processing = true;
-      axios.post('/api/follow', {
-        action: this.user_nofollowing_account[index].screen_name
-      }).then(function (res) {
-        console.log(res.data.message);
-        _this.message = res.data.message;
-
-        _this.user_nofollowing_account.splice(index, 1);
-
-        _this.isActive = true;
-        setTimeout(function () {
-          _this.message = null;
-        }, 3000);
-        _this.processing = false;
+      var url = 'api/usershow/?page=' + this.current_page;
+      axios.get(url).then(function (response) {
+        _this.follow_user = response.data.user_nofollowing_account.data;
+        _this.current_page = response.data.user_nofollowing_account.current_page;
       })["catch"](function (error) {
         return console.log(error);
       });
     },
-    user_reload: function user_reload() {
+    move: function move(page) {
+      if (!(this.current_page === page)) {
+        this.current_page = page;
+        this.getItems();
+      }
+    },
+    getPageClass: function getPageClass(page) {
+      var classes = [];
+
+      if (this.current_page === page) {
+        classes.push('is-active');
+      }
+
+      return classes;
+    },
+    user_follow: function user_follow(index) {
       var _this2 = this;
 
       this.isActive = false;
       this.processing = true;
-      axios.get('/api/reload').then(function (res) {
-        _this2.follow_user = res.data.user_nofollowing_account;
-        _this2.user_nofollowing_account = res.data.user_nofollowing_account;
+      axios.post('/api/follow', {
+        action: this.follow_user[index].screen_name
+      }).then(function (res) {
+        console.log(res.data.message);
         _this2.message = res.data.message;
+        _this2.user_follow_num = res.data.follow_num;
+
+        _this2.follow_user.splice(index, 1);
+
         _this2.isActive = true;
         setTimeout(function () {
           _this2.message = null;
@@ -2206,42 +2296,16 @@ __webpack_require__.r(__webpack_exports__);
     auto_follow: function auto_follow() {
       var _this3 = this;
 
-      var auto_id = [];
-
-      try {
-        for (var i = 0, l = this.follow_user.length; i < l; i++) {
-          // console.log((this.follow_user[i].screen_name));
-          auto_id[i] = this.follow_user[i].screen_name;
-        }
-
-        ;
-      } catch (e) {// console.log(e);
-      }
-
-      if (auto_id.length > 0) {
-        this.isActive = false;
-        this.processing = true;
-        axios.post('/api/autofollow', {
-          action: auto_id
-        }).then(function (res) {
-          console.log(res.data.message);
-          _this3.message = res.data.message;
-          _this3.user_nofollowing_account = [];
-          _this3.follow_user = [];
-          _this3.isActive = true;
-          setTimeout(function () {
-            _this3.message = null;
-          }, 3000);
-          _this3.processing = false;
-        })["catch"](function (error) {
-          return console.log(error);
-        });
-      } else {
-        this.message = "フォローできるユーザーがいません。";
+      axios.post('/api/autofollow', {
+        action: this.auto_selected
+      }).then(function (res) {
+        _this3.message = res.data.message;
         setTimeout(function () {
           _this3.message = null;
         }, 3000);
-      }
+      })["catch"](function (error) {
+        return console.log(error);
+      });
     }
   }
 });
@@ -37860,6 +37924,44 @@ var render = function() {
         : _vm._e(),
       _vm._v(" "),
       _c("div", { staticClass: "p-tw-list__btn c-btn" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.auto_selected,
+              expression: "auto_selected"
+            }
+          ],
+          attrs: { type: "checkbox" },
+          domProps: {
+            checked: Array.isArray(_vm.auto_selected)
+              ? _vm._i(_vm.auto_selected, null) > -1
+              : _vm.auto_selected
+          },
+          on: {
+            change: function($event) {
+              var $$a = _vm.auto_selected,
+                $$el = $event.target,
+                $$c = $$el.checked ? true : false
+              if (Array.isArray($$a)) {
+                var $$v = null,
+                  $$i = _vm._i($$a, $$v)
+                if ($$el.checked) {
+                  $$i < 0 && (_vm.auto_selected = $$a.concat([$$v]))
+                } else {
+                  $$i > -1 &&
+                    (_vm.auto_selected = $$a
+                      .slice(0, $$i)
+                      .concat($$a.slice($$i + 1)))
+                }
+              } else {
+                _vm.auto_selected = $$c
+              }
+            }
+          }
+        }),
+        _vm._v(" "),
         _c(
           "button",
           {
@@ -37867,85 +37969,203 @@ var render = function() {
             attrs: { type: "button", disabled: _vm.processing },
             on: { click: _vm.auto_follow }
           },
-          [_vm._v("自動フォロー")]
-        )
+          [_vm._v("\n             自動フォロー機能設定変更\n         ")]
+        ),
+        _vm._v(" "),
+        _vm._m(1)
       ]),
+      _vm._v(" "),
+      _c(
+        "ul",
+        { staticClass: "p-tw-list__pagination" },
+        [
+          _c("div", { staticClass: "p-tw-list__pagination-div" }, [
+            _vm.hasPrev
+              ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
+                  _c(
+                    "a",
+                    {
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.move(_vm.first_page)
+                        }
+                      }
+                    },
+                    [_vm._v("«")]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.hasPrev
+              ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
+                  _c(
+                    "a",
+                    {
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.move(_vm.current_page - 1)
+                        }
+                      }
+                    },
+                    [_vm._v("<")]
+                  )
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.pages, function(page) {
+            return _c(
+              "li",
+              {
+                staticClass: "p-tw-list__pagination__link",
+                class: _vm.getPageClass(page)
+              },
+              [
+                _c("a", {
+                  attrs: { href: "#" },
+                  domProps: { textContent: _vm._s(page) },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.move(page)
+                    }
+                  }
+                })
+              ]
+            )
+          }),
+          _vm._v(" "),
+          _c("div", [
+            _vm.hasNext
+              ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
+                  _c(
+                    "a",
+                    {
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.move(_vm.current_page + 1)
+                        }
+                      }
+                    },
+                    [_vm._v(">")]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.hasNext
+              ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
+                  _c(
+                    "a",
+                    {
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.move(_vm.last_page)
+                        }
+                      }
+                    },
+                    [_vm._v("»")]
+                  )
+                ])
+              : _vm._e()
+          ])
+        ],
+        2
+      ),
       _vm._v(" "),
       _c(
         "div",
         { staticClass: "p-tw-list__box" },
-        _vm._l(_vm.follow_user, function(user, index) {
-          return _c(
-            "div",
-            { key: user.id, staticClass: "p-tw-list__box__detail" },
-            [
-              _c("div", { staticClass: "p-tw-list__box__detail__btn c-btn" }, [
+        [
+          _c("div", { staticClass: "p-tw-list__box__num" }, [
+            _vm._v(
+              _vm._s(_vm.total_user) +
+                "件中" +
+                _vm._s(_vm.active_usernum.start) +
+                "～" +
+                _vm._s(_vm.active_usernum.end) +
+                "件表示"
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "p-tw-list__box__num" }, [
+            _vm._v(_vm._s(_vm.user_follow_num) + "件フォロー済")
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.follow_user, function(user, index) {
+            return _c(
+              "div",
+              { key: user.id, staticClass: "p-tw-list__box__detail" },
+              [
                 _c(
-                  "button",
-                  {
-                    staticClass: "c-btn__userfollow",
-                    attrs: { type: "button", disabled: _vm.processing },
-                    on: {
-                      click: function($event) {
-                        return _vm.user_follow(index)
-                      }
-                    }
-                  },
-                  [_vm._v("フォロー")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "p-tw-list__box__detail__name" }, [
-                _vm._v(_vm._s(user.user_name))
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "p-tw-list__box__detail__sname" }, [
-                _vm._v("@" + _vm._s(user.screen_name))
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "p-tw-list__box__detail__desc" }, [
-                _vm._v(_vm._s(user.description))
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "p-tw-list__box__detail__count" }, [
-                _c(
-                  "p",
-                  { staticClass: "p-tw-list__box__detail__count-followers" },
-                  [_vm._v(_vm._s(user.follows_count) + "フォロワー")]
+                  "div",
+                  { staticClass: "p-tw-list__box__detail__btn c-btn" },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "c-btn__userfollow",
+                        attrs: { type: "button", disabled: _vm.processing },
+                        on: {
+                          click: function($event) {
+                            return _vm.user_follow(index)
+                          }
+                        }
+                      },
+                      [_vm._v("フォロー")]
+                    )
+                  ]
                 ),
                 _vm._v(" "),
-                _c(
-                  "p",
-                  { staticClass: "p-tw-list__box__detail__count-friends" },
-                  [_vm._v(_vm._s(user.friends_count) + "フォロー")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "p-tw-list__box__detail__text" }, [
-                _c("p", [_vm._v("最新ツイート")]),
-                _vm._v(
-                  "\n                " +
-                    _vm._s(user.recent_tweet) +
-                    "\n              "
-                )
-              ])
-            ]
-          )
-        }),
-        0
+                _c("div", { staticClass: "p-tw-list__box__detail__name" }, [
+                  _vm._v(_vm._s(user.user_name))
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "p-tw-list__box__detail__sname" }, [
+                  _vm._v("@" + _vm._s(user.screen_name))
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "p-tw-list__box__detail__desc" }, [
+                  _vm._v(_vm._s(user.description))
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "p-tw-list__box__detail__count" }, [
+                  _c(
+                    "p",
+                    { staticClass: "p-tw-list__box__detail__count-followers" },
+                    [_vm._v(_vm._s(user.follows_count) + "フォロワー")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "p",
+                    { staticClass: "p-tw-list__box__detail__count-friends" },
+                    [_vm._v(_vm._s(user.friends_count) + "フォロー")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "p-tw-list__box__detail__text" }, [
+                  _c("p", [_vm._v("最新ツイート")]),
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(user.recent_tweet) +
+                      "\n              "
+                  )
+                ])
+              ]
+            )
+          })
+        ],
+        2
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "p-tw-list__btn c-btn" }, [
-        _c(
-          "button",
-          {
-            staticClass: "c-btn__autofollow",
-            attrs: { type: "button", disabled: _vm.processing },
-            on: { click: _vm.user_reload }
-          },
-          [_vm._v("ユーザー情報再取得")]
-        )
-      ])
+      _vm._m(2)
     ])
   ])
 }
@@ -37970,6 +38190,30 @@ var staticRenderFns = [
       _c("span", { staticClass: "c-ball c-ball-7" }),
       _vm._v(" "),
       _c("span", { staticClass: "c-ball c-ball-8" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "p-tw-list__btn__content" }, [
+      _c("p", [_vm._v("チェックをOnにすると自動フォロー機能を使用できます。")]),
+      _vm._v(" "),
+      _c("p", [_vm._v("30min毎に15ユーザーのフォローを自動で行います。")]),
+      _vm._v(" "),
+      _c("p", [
+        _vm._v("全てのユーザーをフォローすると自動でチェックが外れます。")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "p-tw-list__btn c-btn" }, [
+      _c("a", { staticClass: "c-btn__topscroll", attrs: { href: "#" } }, [
+        _vm._v("画面上部に戻る")
+      ])
     ])
   }
 ]
