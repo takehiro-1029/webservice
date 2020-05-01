@@ -1,47 +1,55 @@
-.p-news__box{
-  margin-bottom: 20px;
-  padding-left: 1%;
-  @include mq() {
-    margin-bottom: 15px;
-  }
-  &-list-link {
-    line-height: 30px;
-    font-size: 1.2rem;
-    @include mq(md) {
-      font-size: 1rem;
+.p-news{
+    &__box{
+        margin-bottom: 30px;
+        padding-left: 1%;
+        @include mq() {
+            margin-bottom: 20px;
+        }
+        &-list-link {
+            line-height: 30px;
+            font-size: 1.2rem;
+            padding-bottom: 10px;
+            @include mq(md) {
+                font-size: 1.1rem;
+            }
+            @include mq() {
+                line-height: 15px;
+                font-size: 0.8rem;
+                padding-bottom: 5px;
+            }
+            &:hover{
+              font-weight: bold;
+            }
+        }
+        &-list-date {
+            border-bottom: 1px solid #d0d3d8;
+            line-height: 15px;
+            font-size: 1rem;
+            text-align: right;
+            padding-bottom: 10px;
+            padding-right: 50px;
+            @include mq(md) {
+                padding-right: 30px;
+            }
+            @include mq() {
+                line-height: 10px;
+                font-size: 0.75rem;
+                padding-bottom: 5px;
+                padding-right: 10px;
+            }
+        }
     }
-    @include mq() {
-      line-height: 15px;
-      font-size: 0.8rem;
+    &__title {
+        font-size: 2rem;
+        line-height: 40px;
+        margin-bottom: 30px;
+        @include mq(md) {
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        @include mq() {
+            line-height: 40px;
+            margin-bottom: 10px;
+        }
     }
-    &:hover{
-      font-weight: bold;
-    }
-  }
-  &-list-date {
-    border-bottom: 1px solid #d0d3d8;
-    line-height: 15px;
-    font-size: 1rem;
-    @include mq(md) {
-      font-size: 0.8rem;
-    }
-    @include mq() {
-      line-height: 10px;
-      font-size: 0.65rem;
-    }
-  }
-}
-
-.p-news__title {
-  font-size: 2rem;
-  line-height: 40px;
-  margin-bottom: 30px;
-  @include mq(md) {
-    font-size: 1.2rem;
-    text-align: center;
-  }
-  @include mq() {
-    line-height: 40px;
-    margin-bottom: 10px;
-  }
 }

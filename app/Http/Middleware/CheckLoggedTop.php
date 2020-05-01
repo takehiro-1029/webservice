@@ -18,7 +18,7 @@ class CheckLoggedTop
     public function handle($request, Closure $next)
     {
         if (Auth::check()) {
-            return redirect('mypage');
+            return redirect('news');
         }
 
         return $next($request);

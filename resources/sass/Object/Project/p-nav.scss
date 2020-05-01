@@ -1,18 +1,18 @@
 .p-nav {
-  font-size: 1.2rem;
-  line-height: 60px;
-  display: flex;
-  text-align: center;
-  @include mq() {
-    font-size: 0.8rem;
-  }
-  & li{
-    width: 33%;
-    & a{
-      display: block;
+    font-size: 1.2rem;
+    line-height: 60px;
+    display: flex;
+    text-align: center;
+    @include mq() {
+        font-size: 0.8rem;
     }
-    & a:hover{
-      font-weight: bold;
+    & li{
+        width: 33%;
+        & a{
+            display: block;
+        }
+        & a:hover{
+            font-weight: bold;
+        }
     }
-  }
 }

@@ -75,7 +75,7 @@ class TwitterAutoFollow extends Command
             );
             
 //            DBからフォローしたいユーザーを10件取り出す
-            $follow_user = TwitterUser::orderBy('id', 'asc')->where('user_name','!=', 1)->where('id','>',$auto_follow_user[$i]['followsearch_number'])->take(10)->get()->Toarray();
+            $follow_user = TwitterUser::orderBy('id', 'asc')->where('user_name','!=', 1)->where('id','>',$auto_follow_user[$i]['followsearch_number'])->where('delete_flg', 0)->take(10)->get()->Toarray();
             
 //            フォローしたいユーザーが0の場合は処理をスキップして対象ユーザーのautofollowフラグをfalseにする
             if(count($follow_user) === 0){
@@ -115,6 +115,11 @@ class TwitterAutoFollow extends Command
                   'screen_name' => $follow_name,
                 ));
                 
+//                ユーザーが削除されていた場合はdelete_flgをtrueにして処理をスキップする
+                if(empty($follow)){
+                    TwitterUser::where('screen_name',$follow_name)->update(['delete_flg' => 1]);
+                    continue;
+                };
                 
 //                フォローするユーザとの関係がnoneもしくはfollowed_byの場合はフォローを行う
                 if($follow[0]->connections[0] === 'none' || $follow[0]->connections[0] === 'followed_by'){
@@ -141,6 +146,7 @@ class TwitterAutoFollow extends Command
                     UserFollowList::create($twitter_id);
                 };
                 
+//                次回現在フォローしたユーザーより後のユーザーをフォローするためにidを入れておく
                 User::where('id',$auto_follow_user[$i]['id'])->update(['followsearch_number' => $follow_user[$j]['id']]);
                 
             };

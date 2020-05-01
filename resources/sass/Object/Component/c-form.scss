@@ -1,64 +1,64 @@
 .c-form {
-  margin-bottom: 30px;
-  &__label{
-    font-size: 1.2rem;
-  }
-  &__input input {
-    width: 100%;
-    font-size: 1.2rem;
-    margin-top: 8px;
-    padding: 8px 8px;
-  }
-  &__check{
-    line-height: 30px;
-  }
-  &__check__input {
-    cursor: pointer;
-  }
-  &__check__label {
-    font-size: 1.2rem;
-    cursor: pointer;
-  }
-  &__submit__btn {
-    display: block;
-    width: 100%;
-    padding: 12px 0;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 3px;
-    background: #3490dc;
-    cursor: pointer;
-    color: #fff;
-    font-weight: bold;
-    @include mq(md) {
-      padding: 10px 0;
+    margin-bottom: 30px;
+    &__label{
+        font-size: 1.2rem;
     }
-    @include mq() {
-      padding: 5px 0;
+    &__input input {
+        width: 100%;
+        font-size: 1.2rem;
+        margin-top: 8px;
+        padding: 8px 8px;
     }
-  }
-  &__submit__btn:hover{
-    background: #4386eb;
-  }
-  &__submit__request{
-    margin-top: 20px;
-    text-align: center;
-  }
-  &__submit__request-link{
-    font-size: 1rem;
-  }
-  &__input input[type=text], &__input input[type=email], &__input input[type=password]{
-    border: 1px solid #bdbdbd;
-  }
-  &__input-error{
-    font-size: 1.2rem;
-    line-height: 30px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-align: center;
-    @include mq() {
-      font-size: 0.8rem;
-      margin-bottom: 10px;
+    &__check{
+        line-height: 30px;
     }
-  }
+    &__check__input {
+        cursor: pointer;
+    }
+    &__check__label {
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+    &__submit__btn {
+        display: block;
+        width: 100%;
+        padding: 12px 0;
+        font-size: 1.2rem;
+        border: none;
+        border-radius: 3px;
+        background: #3490dc;
+        cursor: pointer;
+        color: #fff;
+        font-weight: bold;
+        @include mq(md) {
+          padding: 10px 0;
+        }
+        @include mq() {
+          padding: 5px 0;
+        }
+    }
+    &__submit__btn:hover{
+        background: #4386eb;
+    }
+    &__submit__request{
+        margin-top: 20px;
+        text-align: center;
+    }
+    &__submit__request-link{
+        font-size: 1rem;
+    }
+    &__input input[type=text], &__input input[type=email], &__input input[type=password]{
+        border: 1px solid #bdbdbd;
+    }
+    &__input-error{
+        font-size: 1.2rem;
+        line-height: 30px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+        @include mq() {
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+    }
 }

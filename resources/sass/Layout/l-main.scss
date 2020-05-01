@@ -1,19 +1,19 @@
 .l-main {
-  width: $site-width;
-  margin: 50px auto 50px;
-  @include mq(md) {
-    width: 90%;
-  }
-  @include mq() {
-    margin: 20px auto 30px;
-  }
-  &__inner {
-    width: 98%;
-    margin: 0 1%;
-    background: #fff;
+    width: $site-width;
+    margin: 50px auto 50px;
     @include mq(md) {
-      width: 100%;
-      margin: 0;
+        width: 90%;
     }
-  }
+    @include mq() {
+        margin: 20px auto 30px;
+    }
+    &__inner {
+        width: 98%;
+        margin: 0 1%;
+        background: #fff;
+        @include mq(md) {
+            width: 100%;
+            margin: 0;
+        }
+    }
 }

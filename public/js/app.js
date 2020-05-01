@@ -1919,13 +1919,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: [],
+
+  /*
+  btc:コインチェックAPIから取得したbitcoinの最高価格等を入れる
+  updatetime:最後にコメント取得した時間をDBから取り出して入れる
+  isActive_hour,isActive_day,isActive_week:trueにした箇所のボタンをactiveにする
+  isActive_readdone:falseで読み込み中のぐるぐるマークを表示
+  cryptodetail：それぞれの通貨の情報を入れる
+  cryptocheck：checkboxで通貨を表示するために使用（処理では使用していない）
+  cryptoselected：現在ユーザーが選択している通貨を表示
+  */
   data: function data() {
     return {
       btc: [],
@@ -1987,11 +1992,18 @@ __webpack_require__.r(__webpack_exports__);
       cryptoselected: ["BTC", "ETH", "ETC", "LSK", "FCT", "XRP", "XEM", "LTC", "BCH", "MONA", "XLM", "QTUM"]
     };
   },
+
+  /*
+  この画面遷移時に直近1h間のコメント数をDBから取得+コインチェックAPIから直近のBTC価格とそれぞれの通貨の現在価格を取得して格納
+  */
   mounted: function mounted() {
     var _this = this;
 
-    this.isActive_readdone = false;
+    //読みこみ中を表示するためにfalseにする
+    this.isActive_readdone = false; //直近1h間のコメント数をDBから取得する処理
+
     axios.get('/api/hourcomment').then(function (res) {
+      //通貨の数ループを回してひとつずつ情報を入れていき、最後に更新時間を入れる
       for (var i = 0; i < Object.keys(res.data.hourcomment).length; i++) {
         _this.$set(_this.cryptodetail[i], 'commentnum', res.data.hourcomment[_this.cryptodetail[i].name]);
       }
@@ -2000,8 +2012,10 @@ __webpack_require__.r(__webpack_exports__);
       _this.updatetime = res.data.searchendtime.search_endtime;
     })["catch"](function (error) {
       return console.log(error);
-    });
+    }); //コインチェックAPIから直近のBTC価格とそれぞれの通貨の現在価格を取得する処理
+
     axios.get('/api/coincheck').then(function (res) {
+      //通貨の数ループを回してひとつずつ情報を入れていく、最後にBTC価格情報を入れて読み込み中を戻す
       for (var i = 0; i < res.data.current_price.length; i++) {
         _this.$set(_this.cryptodetail[i], 'currentprice', res.data.current_price[i]);
       }
@@ -2013,6 +2027,11 @@ __webpack_require__.r(__webpack_exports__);
       return console.log(error);
     });
   },
+
+  /*
+  コメント数を昇順で並べる+ユーザーが選択した通貨のみを表示するための処理
+  最初にユーザーが選択している通貨のみをフィルターで判別して表示し、最後に昇順に並ぶ処理をしている
+  */
   computed: {
     sortedItemsByAmount: function sortedItemsByAmount() {
       var cryptoselected = this.cryptoselected;
@@ -2025,6 +2044,13 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
+
+  /*
+  コメント数を時間ごとに取り出す処理
+  hourcomment：直近1hのコメント数
+  daycomment：直近1日のコメント数
+  weekcomment：直近1週間のコメント数
+  */
   methods: {
     hourcomment: function hourcomment() {
       var _this2 = this;
@@ -2036,7 +2062,8 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         ;
-        _this2.updatetime = res.data.searchendtime.search_endtime;
+        _this2.updatetime = res.data.searchendtime.search_endtime; //選択中のボタンのみをactiveにするための処理（cssでactiveボタンのみ見た目を変える）
+
         _this2.isActive_hour = true;
         _this2.isActive_day = false;
         _this2.isActive_week = false;
@@ -2181,10 +2208,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  /*
+  画面遷移時にcontrollerからデータを取得してくる
+  user_nofollowing_account：フォロー対象のツイッターアカウントデータ
+  autofollow_selected：画面遷移時にログインユーザーが自動フォロー機能をonにしているかどうか
+  follow_num：画面遷移時にログインユーザーがこのシステムでフォローした数を取得
+  */
   props: ['user_nofollowing_account', 'autofollow_selected', 'follow_num'],
+
+  /*
+  follow_user：フォロー対象のユーザーデータ
+  message：ユーザー画面に通知したいメッセージを入れる
+  processing：trueでボタンの非活性化（ユーザーが押しても無効化する）
+  isActive：falseで読み込み中のぐるぐるマークを表示
+  last_page：ページネーションの最後のページ数を取得
+  current_page：現在のページ数（初期値は1）
+  total_user:DBから取得したユーザーの総数
+  first_page：ページネーションの初めのページ
+  auto_selected：ログイン中のユーザーの自動フォロー機能をOn/Offの判定
+  user_follow_num：ログイン中のユーザーがこのシステムでフォローした数
+  */
   data: function data() {
     return {
       follow_user: this.user_nofollowing_account.data,
@@ -2199,6 +2243,13 @@ __webpack_require__.r(__webpack_exports__);
       user_follow_num: this.follow_num
     };
   },
+
+  /*
+  hasPrev：現在ページが1よりも大きい場合、ページネーションの1つ前へボタンと1ページ目へ戻るリンクを画面に表示
+  hasNext：現在ページが最終ページよりも小さい場合、ページネーションの1つ次へボタンと最終ページへ進むリンクを画面に表示
+  pages：ページネーション遷移で表示するページ数を場合分けで取得して表示
+  active_usernum：現在表示中のユーザーが何件中何件目のユーザーなのかを表示（1ページにつき15件のユーザーが格納されている）
+  */
   computed: {
     hasPrev: function hasPrev() {
       return this.current_page > 1;
@@ -2207,19 +2258,21 @@ __webpack_require__.r(__webpack_exports__);
       return this.current_page < this.last_page;
     },
     pages: function pages() {
-      var pages = [];
+      var pages = []; //現在のページが4よりも大きく最終ページ-3より小さい場合は現在のページ前後4ページを表示する
 
       if (4 < this.current_page && this.current_page < this.last_page - 3) {
         for (var i = this.current_page - 4; i <= this.current_page + 4; i++) {
           pages.push(i);
         }
-      }
+      } //現在のページが4よりも小さい場合は1-9ページ目を表示する
+
 
       if (4 >= this.current_page) {
         for (var _i = this.first_page; _i <= this.first_page + 8; _i++) {
           pages.push(_i);
         }
-      }
+      } //現在のページが最終ページ-3より大きい場合は最終ページ-8から最終ページを表示する
+
 
       if (this.last_page - 3 <= this.current_page) {
         for (var _i2 = this.last_page - 8; _i2 <= this.last_page; _i2++) {
@@ -2243,6 +2296,14 @@ __webpack_require__.r(__webpack_exports__);
       return active_usernum;
     }
   },
+
+  /*
+  getItems：ユーザーが遷移したいページのデータを取得するための処理
+  move(page)：実際にユーザーがページ遷移するための処理
+  getPageClass(page)：現在表示中のページにcssのクラスを追加して見た目を変えるための処理
+  user_follow：任意のユーザーをフォローする処理
+  auto_follow：自動フォロー機能のOn/Offを切り替えるための処理
+  */
   methods: {
     getItems: function getItems() {
       var _this = this;
@@ -2273,18 +2334,22 @@ __webpack_require__.r(__webpack_exports__);
     user_follow: function user_follow(index) {
       var _this2 = this;
 
+      //読み込み中のぐるぐるとボタンの非活性化を実施
       this.isActive = false;
       this.processing = true;
+      ログイン中のユーザーがフォローしたいアカウントのユーザーデータを送る;
       axios.post('/api/follow', {
         action: this.follow_user[index].screen_name
       }).then(function (res) {
         console.log(res.data.message);
-        _this2.message = res.data.message;
-        _this2.user_follow_num = res.data.follow_num;
+        _this2.message = res.data.message; //ログイン中のユーザーがこのシステムでフォローした数を更新
+
+        _this2.user_follow_num = res.data.follow_num; //処理完了後に対象アカウントを画面から削除する
 
         _this2.follow_user.splice(index, 1);
 
-        _this2.isActive = true;
+        _this2.isActive = true; //処理完了後は画面に3秒間メッセージを通知する
+
         setTimeout(function () {
           _this2.message = null;
         }, 3000);
@@ -37919,7 +37984,7 @@ var render = function() {
       _vm._v(" "),
       _vm.message
         ? _c("div", { staticClass: "p-tw-list__message" }, [
-            _vm._v("\n          " + _vm._s(_vm.message) + "\n      ")
+            _vm._v("\n            " + _vm._s(_vm.message) + "\n        ")
           ])
         : _vm._e(),
       _vm._v(" "),
@@ -37969,54 +38034,54 @@ var render = function() {
             attrs: { type: "button", disabled: _vm.processing },
             on: { click: _vm.auto_follow }
           },
-          [_vm._v("\n             自動フォロー機能設定変更\n         ")]
+          [_vm._v("\n                自動フォロー機能設定変更\n            ")]
         ),
         _vm._v(" "),
         _vm._m(1)
       ]),
       _vm._v(" "),
-      _c(
-        "ul",
-        { staticClass: "p-tw-list__pagination" },
-        [
-          _c("div", { staticClass: "p-tw-list__pagination-div" }, [
-            _vm.hasPrev
-              ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
-                  _c(
-                    "a",
-                    {
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.move(_vm.first_page)
-                        }
+      _c("ul", { staticClass: "p-tw-list__pagination" }, [
+        _c("div", { staticClass: "p-tw-list__pagination-div-prev" }, [
+          _vm.hasPrev
+            ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.move(_vm.first_page)
                       }
-                    },
-                    [_vm._v("«")]
-                  )
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.hasPrev
-              ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
-                  _c(
-                    "a",
-                    {
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.move(_vm.current_page - 1)
-                        }
-                      }
-                    },
-                    [_vm._v("<")]
-                  )
-                ])
-              : _vm._e()
-          ]),
+                    }
+                  },
+                  [_vm._v("«")]
+                )
+              ])
+            : _vm._e(),
           _vm._v(" "),
+          _vm.hasPrev
+            ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.move(_vm.current_page - 1)
+                      }
+                    }
+                  },
+                  [_vm._v("<")]
+                )
+              ])
+            : _vm._e()
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "p-tw-list__pagination-div-main" },
           _vm._l(_vm.pages, function(page) {
             return _c(
               "li",
@@ -38038,47 +38103,47 @@ var render = function() {
               ]
             )
           }),
+          0
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "p-tw-list__pagination-div-next" }, [
+          _vm.hasNext
+            ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.move(_vm.current_page + 1)
+                      }
+                    }
+                  },
+                  [_vm._v(">")]
+                )
+              ])
+            : _vm._e(),
           _vm._v(" "),
-          _c("div", [
-            _vm.hasNext
-              ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
-                  _c(
-                    "a",
-                    {
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.move(_vm.current_page + 1)
-                        }
+          _vm.hasNext
+            ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.move(_vm.last_page)
                       }
-                    },
-                    [_vm._v(">")]
-                  )
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.hasNext
-              ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
-                  _c(
-                    "a",
-                    {
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.move(_vm.last_page)
-                        }
-                      }
-                    },
-                    [_vm._v("»")]
-                  )
-                ])
-              : _vm._e()
-          ])
-        ],
-        2
-      ),
+                    }
+                  },
+                  [_vm._v("»")]
+                )
+              ])
+            : _vm._e()
+        ])
+      ]),
       _vm._v(" "),
       _c(
         "div",
@@ -38153,9 +38218,9 @@ var render = function() {
                 _c("div", { staticClass: "p-tw-list__box__detail__text" }, [
                   _c("p", [_vm._v("最新ツイート")]),
                   _vm._v(
-                    "\n                " +
+                    "\n                    " +
                       _vm._s(user.recent_tweet) +
-                      "\n              "
+                      "\n                "
                   )
                 ])
               ]
@@ -38197,12 +38262,12 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "p-tw-list__btn__content" }, [
-      _c("p", [_vm._v("チェックをOnにすると自動フォロー機能を使用できます。")]),
-      _vm._v(" "),
-      _c("p", [_vm._v("30min毎に15ユーザーのフォローを自動で行います。")]),
-      _vm._v(" "),
-      _c("p", [
-        _vm._v("全てのユーザーをフォローすると自動でチェックが外れます。")
+      _c("ul", [
+        _c("li", [_vm._v("チェックすると自動フォロー機能On")]),
+        _vm._v(" "),
+        _c("li", [_vm._v("30min毎に10ユーザーを自動フォロー")]),
+        _vm._v(" "),
+        _c("li", [_vm._v("全ユーザーをフォローすると機能Off")])
       ])
     ])
   },
@@ -38210,7 +38275,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "p-tw-list__btn c-btn" }, [
+    return _c("div", { staticClass: "p-tw-list__topscroll c-btn" }, [
       _c("a", { staticClass: "c-btn__topscroll", attrs: { href: "#" } }, [
         _vm._v("画面上部に戻る")
       ])

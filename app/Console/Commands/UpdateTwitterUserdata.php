@@ -51,7 +51,7 @@ class UpdateTwitterUserdata extends Command
 
 //        twitter_usersテーブルから未更新の（day_update_flgがfalse）twitterのアカウントidを取得
       $twitter_user = new TwitterUser;
-      $twitter_account_id = $twitter_user->orderBy('id', 'asc')->where('day_update_flg', 'false')->select('account_id')->first();
+      $twitter_account_id = $twitter_user->orderBy('id', 'asc')->where('day_update_flg', 'false')->where('delete_flg', 'false')->select('account_id')->first();
 
 //        ループで更新対象のユーザーがなくなるまで処理する(10秒ごとに1ユーザー更新していく)    
       while(!empty($twitter_account_id)) {
@@ -79,13 +79,12 @@ class UpdateTwitterUserdata extends Command
               $user_account_data['updated_at'] = $now;
               $twitter_user->where(['account_id' => $user_account_data['account_id']])->update($user_account_data);
           }else{
-              $twitter_user->where('account_id',$twitter_account_id->account_id)->update(['day_update_flg' => '1'],['updated_at' => $now]);
-//              print_r($twitter_account_id->account_id);
+              $twitter_user->where('account_id',$twitter_account_id->account_id)->update(['day_update_flg' => '1'],['delete_flg' => '1'],['updated_at' => $now]);
           };
 
           sleep(10);
           $twitter_user = new TwitterUser;
-          $twitter_account_id = $twitter_user->orderBy('id', 'asc')->where('day_update_flg', 'false')->select('account_id')->first();
+          $twitter_account_id = $twitter_user->orderBy('id', 'asc')->where('day_update_flg', 'false')->where('delete_flg', 'false')->select('account_id')->first();
 
 //          すべてのユーザーが更新できたらflgをfalseに戻してbreak処理
           if(empty($twitter_account_id)){
@@ -93,9 +92,6 @@ class UpdateTwitterUserdata extends Command
               $twitter_user->where('day_update_flg','1')->update(['day_update_flg' => '0']);
               break;
           };
-//           print_r('終わり');
       };
-
-//      print_r('finish');
     }
 }

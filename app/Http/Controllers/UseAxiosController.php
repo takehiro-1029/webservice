@@ -35,7 +35,7 @@ class UseAxiosController extends Controller
         $oauth_token = $user_token->oauth_token;
         $oauth_token_secret = $user_token->oauth_token_secret;
 
-        # access_tokenを用いてTwitterOAuthをinstance化
+        // access_tokenを用いてTwitterOAuthをinstance化
         $twitter_login_user = new TwitterOAuth(
             config('services.twitter.client_id'),
             config('services.twitter.client_secret'),
@@ -164,8 +164,7 @@ class UseAxiosController extends Controller
             $posts = json_decode($response->getBody()->getContents(), true);
             $current_price[$i] = round($posts['rate'],1);
         };
-//        var_dump($current_price);
-
+        
         return response()->json([
             'btc_rate' => $btc_rate,
             'current_price' => $current_price,

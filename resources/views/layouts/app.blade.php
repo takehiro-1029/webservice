@@ -3,7 +3,10 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <title>仮想通貨のトレンドが一目でわかる||CryptoTrend</title>
+        <meta name="description" content="仮想通貨トレンド情報を独自方法で解析し無料で提供しています。仮想通貨に関する最新ニュースも閲覧可能、自動フォロー機能で仮想通貨に特化したTwitter運用もお任せください。" />
+        <meta name="keywords" content="仮想通貨,トレンド,最新情報">
+        
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
 

@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
          $schedule->command('command:getcryptocomment')->everyFiveMinutes();
          $schedule->command('command:getnewaccount')->dailyAt('02:20');
          $schedule->command('command:updateaccount')->dailyAt('04:20');
-         $schedule->command('command:twitterautofollow')->cron('*/20 * * * * *');
+         $schedule->command('command:twitterautofollow')->everyThirtyMinutes();
     }
 
     /**
