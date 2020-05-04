@@ -196,7 +196,7 @@
                 //読み込み中のぐるぐるとボタンの非活性化を実施
                 this.isActive = false;
                 this.processing = true;
-                ログイン中のユーザーがフォローしたいアカウントのユーザーデータを送る
+                //ログイン中のユーザーがフォローしたいアカウントのユーザーデータを送る
                 axios.post('/api/follow',{action:this.follow_user[index].screen_name}).then((res)=>{
                     console.log(res.data.message);
                     this.message = res.data.message;

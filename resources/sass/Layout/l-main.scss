@@ -5,7 +5,8 @@
         width: 90%;
     }
     @include mq() {
-        margin: 20px auto 30px;
+        padding-top: 80px;
+        margin: 0 auto;
     }
     &__inner {
         width: 98%;

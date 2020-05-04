@@ -2,6 +2,6 @@
     width: 100%;
     margin: 20px 0;
     @include mq() {
-        margin-bottom: 0;
+        display: none;
     }
 }

@@ -71,6 +71,14 @@ class UseAxiosController extends Controller
         $follow = $twitter_login_user->get('friendships/lookup', array(
           'screen_name' => $name,
         ));
+        
+         //ユーザーが削除されていた場合はdelete_flgをtrueにして処理をスキップする
+        if(empty($follow)){
+            TwitterUser::where('screen_name',$name)->update(['delete_flg' => 1]);
+            return response()->json([
+                 'message' => 'このユーザーアカウントは削除されています。',
+            ]);
+        };
 
         // ユーザーとの関係がnone,followed_byの場合はフォローを行い、それ以外はフォロー済みと判定
         if($follow[0]->connections[0] === 'none' || $follow[0]->connections[0] === 'followed_by'){

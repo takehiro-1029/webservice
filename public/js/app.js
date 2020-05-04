@@ -2336,8 +2336,8 @@ __webpack_require__.r(__webpack_exports__);
 
       //読み込み中のぐるぐるとボタンの非活性化を実施
       this.isActive = false;
-      this.processing = true;
-      ログイン中のユーザーがフォローしたいアカウントのユーザーデータを送る;
+      this.processing = true; //ログイン中のユーザーがフォローしたいアカウントのユーザーデータを送る
+
       axios.post('/api/follow', {
         action: this.follow_user[index].screen_name
       }).then(function (res) {
@@ -50484,7 +50484,12 @@ var app = new Vue({
 }); // フラッシュメッセージを5秒後に消す処理
 
 $(function () {
-  $('.js-flash-message').fadeOut(5000);
+  $('.js-flash-message').fadeOut(5000); // SPメニュー
+
+  $('.js-toggle-sp-menu').on('click', function () {
+    $(this).toggleClass('active');
+    $('.js-toggle-sp-menu-target').toggleClass('active');
+  });
 });
 
 /***/ }),

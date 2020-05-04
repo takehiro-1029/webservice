@@ -37,4 +37,10 @@ const app = new Vue({
 // フラッシュメッセージを5秒後に消す処理
 $(function() {
     $('.js-flash-message').fadeOut(5000);
+
+    // SPメニュー
+    $('.js-toggle-sp-menu').on('click', function () {
+    $(this).toggleClass('active');
+        $('.js-toggle-sp-menu-target').toggleClass('active');
+    });
 });

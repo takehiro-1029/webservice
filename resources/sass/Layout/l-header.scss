@@ -1,14 +1,18 @@
 .l-header {
     width: $site-width;
     margin: 0 auto;
-    padding: 15px 0;
+    padding: 20px 0;
     line-height: 40px;
     -webkit-box-shadow: 0 10px 10px 0 rgba(237, 173, 11, 0.2);
           box-shadow: 0 10px 10px 0 rgba(237, 173, 11, 0.2);
     @include mq(md) {
-    width: 90%;
+        width: 90%;
     }
     @include mq() {
-    padding: 5px 0;
+        width: 100%;
+        position: fixed;
+        box-shadow: none;
+        z-index: 1;
+        background: rgba(255, 255, 255, 0.85);
     }
 }

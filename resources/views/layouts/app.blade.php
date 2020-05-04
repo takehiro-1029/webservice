@@ -51,13 +51,33 @@
                     <div class="p-header__actions">
                         <div class="p-header__name">{{ Auth::user()->name }} </div>
                         <div class="p-header__logout">
-                          <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                            <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                             {{ __('Logout') }}
-                          </a>
-                          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf
-                          </form>
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf
+                            </form>
                         </div>
                     </div>
+
+                    <div class="p-header__menu-trigger js-toggle-sp-menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <nav class="p-header__nav js-toggle-sp-menu-target">
+                        <ul class="p-header__nav-menu">
+                            <li class="p-header__nav-menu-item">{{ Auth::user()->name }}</li>
+                            <li class="p-header__nav-menu-item"><a href="{{route('cryptotrend.news')}}">関連ニュース</a></li>
+                            <li class="p-header__nav-menu-item"><a href="{{route('cryptotrend.rank')}}">トレンド表示</a></li>
+                            <li class="p-header__nav-menu-item"><a href="{{route('cryptotrend.usershow')}}">アカウント一覧</a></li>
+                            <li class="p-header__nav-menu-item">
+                                <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                    {{ __('Logout') }}
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
+                            </li>
+                        </ul>
+                    </nav>
                 @endguest
 
             </div>
