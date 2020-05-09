@@ -79,12 +79,12 @@ class UpdateTwitterUserdata extends Command
               $user_account_data['updated_at'] = $now;
               $twitter_user->where(['account_id' => $user_account_data['account_id']])->update($user_account_data);
           }else{
-              $twitter_user->where('account_id',$twitter_account_id->account_id)->update(['day_update_flg' => '1'],['delete_flg' => '1'],['updated_at' => $now]);
+              $twitter_user->where('account_id',$twitter_account_id->account_id)->update(['day_update_flg' => '1','delete_flg' => '1']);
           };
 
           sleep(10);
           $twitter_user = new TwitterUser;
-          $twitter_account_id = $twitter_user->orderBy('id', 'asc')->where('day_update_flg', 'false')->where('delete_flg', 'false')->select('account_id')->first();
+          $twitter_account_id = $twitter_user->orderBy('id', 'asc')->where('day_update_flg','0')->where('delete_flg','0')->select('account_id')->first();
 
 //          すべてのユーザーが更新できたらflgをfalseに戻してbreak処理
           if(empty($twitter_account_id)){

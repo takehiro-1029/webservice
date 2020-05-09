@@ -11,6 +11,7 @@
         }
     @include mq() {
         font-size: 0.7rem;
+        box-shadow: none;
     }
     &__copyright {
         display: block;

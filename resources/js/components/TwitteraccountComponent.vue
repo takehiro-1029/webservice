@@ -1,17 +1,8 @@
 <template>
     <div class="l-main__inner">
-        <div class="p-wrapper" :class="{'is-visible': isActive}">
-            <div class="p-wrapper_balls-guruguru">
-                <span class="c-ball c-ball-1"></span>
-                <span class="c-ball c-ball-2"></span>
-                <span class="c-ball c-ball-3"></span>
-                <span class="c-ball c-ball-4"></span>
-                <span class="c-ball c-ball-5"></span>
-                <span class="c-ball c-ball-6"></span>
-                <span class="c-ball c-ball-7"></span>
-                <span class="c-ball c-ball-8"></span>
-            </div>
-        </div>
+       
+        <readguruguru-component :isActive="isActive"></readguruguru-component>
+        
         <div class="p-tw-list">
             <div class="p-tw-list__title">Twitterアカウント</div>
 
@@ -32,29 +23,9 @@
                     </ul>
                 </div>
             </div>
-            <ul class="p-tw-list__pagination">
-                <div class="p-tw-list__pagination-div-prev">
-                    <li class="p-tw-list__pagination__link" v-if="hasPrev">
-                        <a href="#" v-on:click.prevent="move(first_page)">&laquo;</a>
-                    </li>
-                    <li class="p-tw-list__pagination__link" v-if="hasPrev">
-                        <a href="#" v-on:click.prevent="move(current_page-1)">&lt;</a>
-                    </li>
-                </div>
-                <div class="p-tw-list__pagination-div-main">
-                    <li class="p-tw-list__pagination__link" :class="getPageClass(page)" v-for="page in pages">
-                        <a href="#" v-text="page" v-on:click.prevent="move(page)"></a>
-                    </li>
-                </div>
-                <div class="p-tw-list__pagination-div-next">
-                    <li class="p-tw-list__pagination__link" v-if="hasNext">
-                        <a href="#" v-on:click.prevent="move(current_page+1)">&gt;</a>
-                    </li>
-                    <li class="p-tw-list__pagination__link" v-if="hasNext">
-                        <a href="#" v-on:click.prevent="move(last_page)">&raquo;</a>
-                    </li>
-                </div>
-            </ul>
+            
+            <pagination-component :last_page="last_page" :current_page="current_page" @parentMethod="updateCurrentPage"></pagination-component>
+            
             <div class="p-tw-list__box">
                 <div class="p-tw-list__box__num">{{total_user}}件中{{active_usernum.start}}～{{active_usernum.end}}件表示</div>
                 <div class="p-tw-list__box__num">{{user_follow_num}}件フォロー済</div>
@@ -99,7 +70,6 @@
         last_page：ページネーションの最後のページ数を取得
         current_page：現在のページ数（初期値は1）
         total_user:DBから取得したユーザーの総数
-        first_page：ページネーションの初めのページ
         auto_selected：ログイン中のユーザーの自動フォロー機能をOn/Offの判定
         user_follow_num：ログイン中のユーザーがこのシステムでフォローした数
         */
@@ -112,46 +82,14 @@
                 last_page: this.user_nofollowing_account.last_page,
                 current_page: 1,
                 total_user: this.user_nofollowing_account.total,
-                first_page: 1,
                 auto_selected: this.autofollow_selected,
                 user_follow_num: this.follow_num,
             }
         },
         /*
-        hasPrev：現在ページが1よりも大きい場合、ページネーションの1つ前へボタンと1ページ目へ戻るリンクを画面に表示
-        hasNext：現在ページが最終ページよりも小さい場合、ページネーションの1つ次へボタンと最終ページへ進むリンクを画面に表示
-        pages：ページネーション遷移で表示するページ数を場合分けで取得して表示
         active_usernum：現在表示中のユーザーが何件中何件目のユーザーなのかを表示（1ページにつき15件のユーザーが格納されている）
         */
         computed: {
-            hasPrev() {
-                return (this.current_page > 1);
-            },
-            hasNext() {
-                return (this.current_page < this.last_page);
-            },
-            pages() {
-                let pages = [];
-                //現在のページが4よりも大きく最終ページ-3より小さい場合は現在のページ前後4ページを表示する
-                if(4 < this.current_page && this.current_page < this.last_page-3 ) {
-                    for(let i = this.current_page-4 ; i <= this.current_page+4 ; i++) {
-                        pages.push(i);
-                    }
-                }
-                //現在のページが4よりも小さい場合は1-9ページ目を表示する
-                if(4 >= this.current_page) {
-                    for(let i = this.first_page ; i <= this.first_page+8 ; i++) {
-                        pages.push(i);
-                    }
-                }
-                //現在のページが最終ページ-3より大きい場合は最終ページ-8から最終ページを表示する
-                if(this.last_page-3 <= this.current_page) {
-                    for(let i = this.last_page-8 ; i <= this.last_page ; i++) {
-                        pages.push(i);
-                    }
-                }
-                return pages;
-            },
             active_usernum () {
                 let active_usernum = {};
                 if (this.current_page !== this.last_page) {
@@ -165,32 +103,17 @@
             }
         },
         /*
-        getItems：ユーザーが遷移したいページのデータを取得するための処理
-        move(page)：実際にユーザーがページ遷移するための処理
-        getPageClass(page)：現在表示中のページにcssのクラスを追加して見た目を変えるための処理
+        updateCurrentPage：ユーザーが遷移したいページのデータを取得するための処理(PaginationComponentから実行)
         user_follow：任意のユーザーをフォローする処理
         auto_follow：自動フォロー機能のOn/Offを切り替えるための処理
         */
         methods: {
-            getItems() {
+            updateCurrentPage (page) {
+                this.current_page = page;
                 const url = 'api/usershow/?page='+ this.current_page;
                 axios.get(url).then((response) => {
                     this.follow_user = response.data.user_nofollowing_account.data;
-                    this.current_page = response.data.user_nofollowing_account.current_page;
                 }).catch(error => console.log(error))
-            },
-            move(page)  {
-                if(!(this.current_page === page)) {
-                    this.current_page = page;
-                    this.getItems();
-                }
-            },
-            getPageClass(page) {
-                let classes = [];
-                if(this.current_page === page) {
-                    classes.push('is-active');
-                }
-                return classes;
             },
             user_follow: function(index){
                 //読み込み中のぐるぐるとボタンの非活性化を実施

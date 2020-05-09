@@ -1910,18 +1910,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: [],
-
   /*
   btc:コインチェックAPIから取得したbitcoinの最高価格等を入れる
   updatetime:最後にコメント取得した時間をDBから取り出して入れる
@@ -2115,10 +2104,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TwitteraccountComponent.vue?vue&type=script&lang=js&":
-/*!**********************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TwitteraccountComponent.vue?vue&type=script&lang=js& ***!
-  \**********************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaginationComponent.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PaginationComponent.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2150,9 +2139,125 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+/* harmony default export */ __webpack_exports__["default"] = ({
+  /*
+  (親から取得)
+  last_page：ページネーションの最後のページ数を取得
+  current_page：現在のページ数（初期値は1）
+  */
+  props: ['last_page', 'current_page'],
+
+  /*
+  first_page：ページネーションの初めのページ
+  */
+  data: function data() {
+    return {
+      first_page: 1
+    };
+  },
+
+  /*
+  hasPrev：現在ページが1よりも大きい場合、ページネーションの1つ前へボタンと1ページ目へ戻るリンクを画面に表示
+  hasNext：現在ページが最終ページよりも小さい場合、ページネーションの1つ次へボタンと最終ページへ進むリンクを画面に表示
+  pages：ページネーション遷移で表示するページ数を場合分けで取得して表示
+  */
+  computed: {
+    hasPrev: function hasPrev() {
+      return this.current_page > 1;
+    },
+    hasNext: function hasNext() {
+      return this.current_page < this.last_page;
+    },
+    pages: function pages() {
+      var pages = []; //現在のページが4よりも大きく最終ページ-3より小さい場合は現在のページ前後4ページを表示する
+
+      if (4 < this.current_page && this.current_page < this.last_page - 3) {
+        for (var i = this.current_page - 4; i <= this.current_page + 4; i++) {
+          pages.push(i);
+        }
+      } //現在のページが4よりも小さい場合は1-9ページ目を表示する
+
+
+      if (4 >= this.current_page) {
+        for (var _i = this.first_page; _i <= this.first_page + 8; _i++) {
+          pages.push(_i);
+        }
+      } //現在のページが最終ページ-3より大きい場合は最終ページ-8から最終ページを表示する
+
+
+      if (this.last_page - 3 <= this.current_page) {
+        for (var _i2 = this.last_page - 8; _i2 <= this.last_page; _i2++) {
+          pages.push(_i2);
+        }
+      }
+
+      return pages;
+    }
+  },
+
+  /*  
+  move(page)：実際にユーザーがページ遷移するための処理
+  getPageClass(page)：現在表示中のページにcssのクラスを追加して見た目を変えるための処理
+  */
+  methods: {
+    move: function move(page) {
+      if (!(this.current_page === page)) {
+        this.$emit('parentMethod', page);
+      }
+    },
+    getPageClass: function getPageClass(page) {
+      var classes = [];
+
+      if (this.current_page === page) {
+        classes.push('is-active');
+      }
+
+      return classes;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReadGuruguruComponent.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReadGuruguruComponent.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['isActive']
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TwitteraccountComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TwitteraccountComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 //
 //
 //
@@ -2225,7 +2330,6 @@ __webpack_require__.r(__webpack_exports__);
   last_page：ページネーションの最後のページ数を取得
   current_page：現在のページ数（初期値は1）
   total_user:DBから取得したユーザーの総数
-  first_page：ページネーションの初めのページ
   auto_selected：ログイン中のユーザーの自動フォロー機能をOn/Offの判定
   user_follow_num：ログイン中のユーザーがこのシステムでフォローした数
   */
@@ -2238,50 +2342,15 @@ __webpack_require__.r(__webpack_exports__);
       last_page: this.user_nofollowing_account.last_page,
       current_page: 1,
       total_user: this.user_nofollowing_account.total,
-      first_page: 1,
       auto_selected: this.autofollow_selected,
       user_follow_num: this.follow_num
     };
   },
 
   /*
-  hasPrev：現在ページが1よりも大きい場合、ページネーションの1つ前へボタンと1ページ目へ戻るリンクを画面に表示
-  hasNext：現在ページが最終ページよりも小さい場合、ページネーションの1つ次へボタンと最終ページへ進むリンクを画面に表示
-  pages：ページネーション遷移で表示するページ数を場合分けで取得して表示
   active_usernum：現在表示中のユーザーが何件中何件目のユーザーなのかを表示（1ページにつき15件のユーザーが格納されている）
   */
   computed: {
-    hasPrev: function hasPrev() {
-      return this.current_page > 1;
-    },
-    hasNext: function hasNext() {
-      return this.current_page < this.last_page;
-    },
-    pages: function pages() {
-      var pages = []; //現在のページが4よりも大きく最終ページ-3より小さい場合は現在のページ前後4ページを表示する
-
-      if (4 < this.current_page && this.current_page < this.last_page - 3) {
-        for (var i = this.current_page - 4; i <= this.current_page + 4; i++) {
-          pages.push(i);
-        }
-      } //現在のページが4よりも小さい場合は1-9ページ目を表示する
-
-
-      if (4 >= this.current_page) {
-        for (var _i = this.first_page; _i <= this.first_page + 8; _i++) {
-          pages.push(_i);
-        }
-      } //現在のページが最終ページ-3より大きい場合は最終ページ-8から最終ページを表示する
-
-
-      if (this.last_page - 3 <= this.current_page) {
-        for (var _i2 = this.last_page - 8; _i2 <= this.last_page; _i2++) {
-          pages.push(_i2);
-        }
-      }
-
-      return pages;
-    },
     active_usernum: function active_usernum() {
       var active_usernum = {};
 
@@ -2298,38 +2367,21 @@ __webpack_require__.r(__webpack_exports__);
   },
 
   /*
-  getItems：ユーザーが遷移したいページのデータを取得するための処理
-  move(page)：実際にユーザーがページ遷移するための処理
-  getPageClass(page)：現在表示中のページにcssのクラスを追加して見た目を変えるための処理
+  updateCurrentPage：ユーザーが遷移したいページのデータを取得するための処理(PaginationComponentから実行)
   user_follow：任意のユーザーをフォローする処理
   auto_follow：自動フォロー機能のOn/Offを切り替えるための処理
   */
   methods: {
-    getItems: function getItems() {
+    updateCurrentPage: function updateCurrentPage(page) {
       var _this = this;
 
+      this.current_page = page;
       var url = 'api/usershow/?page=' + this.current_page;
       axios.get(url).then(function (response) {
         _this.follow_user = response.data.user_nofollowing_account.data;
-        _this.current_page = response.data.user_nofollowing_account.current_page;
       })["catch"](function (error) {
         return console.log(error);
       });
-    },
-    move: function move(page) {
-      if (!(this.current_page === page)) {
-        this.current_page = page;
-        this.getItems();
-      }
-    },
-    getPageClass: function getPageClass(page) {
-      var classes = [];
-
-      if (this.current_page === page) {
-        classes.push('is-active');
-      }
-
-      return classes;
     },
     user_follow: function user_follow(index) {
       var _this2 = this;
@@ -37747,187 +37799,166 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "l-main__inner" }, [
-    _c(
-      "div",
-      {
-        staticClass: "p-wrapper",
-        class: { "is-visible": _vm.isActive_readdone }
-      },
-      [_vm._m(0)]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "p-rank-box" }, [
-      _c("div", { staticClass: "p-rank-box__title" }, [
-        _vm._v("トレンドランキング")
-      ]),
+  return _c(
+    "div",
+    { staticClass: "l-main__inner" },
+    [
+      _c("readguruguru-component", {
+        attrs: { isActive: _vm.isActive_readdone }
+      }),
       _vm._v(" "),
-      _c("div", { staticClass: "p-rank-box__info" }, [
-        _c("div", { staticClass: "p-rank-box__info__price" }, [
-          _vm._v("BTC過去24時間価格")
+      _c("div", { staticClass: "p-rank-box" }, [
+        _c("div", { staticClass: "p-rank-box__title" }, [
+          _vm._v("トレンドランキング")
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "p-rank-box__info__price" }, [
-          _vm._v("最高:" + _vm._s(_vm.btc.high) + "円")
+        _c("div", { staticClass: "p-rank-box__info" }, [
+          _c("div", { staticClass: "p-rank-box__info__price" }, [
+            _vm._v("BTC過去24時間価格")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "p-rank-box__info__price" }, [
+            _vm._v("最高:" + _vm._s(_vm.btc.high) + "円")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "p-rank-box__info__price" }, [
+            _vm._v("最低:" + _vm._s(_vm.btc.low) + "円")
+          ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "p-rank-box__info__price" }, [
-          _vm._v("最低:" + _vm._s(_vm.btc.low) + "円")
-        ])
-      ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "p-rank-box__select" },
-        _vm._l(_vm.cryptocheck, function(value) {
-          return _c("label", { staticClass: "p-rank-box__select__check" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.cryptoselected,
-                  expression: "cryptoselected"
-                }
-              ],
-              attrs: { type: "checkbox" },
-              domProps: {
-                value: value,
-                checked: Array.isArray(_vm.cryptoselected)
-                  ? _vm._i(_vm.cryptoselected, value) > -1
-                  : _vm.cryptoselected
-              },
-              on: {
-                change: function($event) {
-                  var $$a = _vm.cryptoselected,
-                    $$el = $event.target,
-                    $$c = $$el.checked ? true : false
-                  if (Array.isArray($$a)) {
-                    var $$v = value,
-                      $$i = _vm._i($$a, $$v)
-                    if ($$el.checked) {
-                      $$i < 0 && (_vm.cryptoselected = $$a.concat([$$v]))
+        _c(
+          "div",
+          { staticClass: "p-rank-box__select" },
+          _vm._l(_vm.cryptocheck, function(value) {
+            return _c("label", { staticClass: "p-rank-box__select__check" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.cryptoselected,
+                    expression: "cryptoselected"
+                  }
+                ],
+                attrs: { type: "checkbox" },
+                domProps: {
+                  value: value,
+                  checked: Array.isArray(_vm.cryptoselected)
+                    ? _vm._i(_vm.cryptoselected, value) > -1
+                    : _vm.cryptoselected
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.cryptoselected,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = value,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 && (_vm.cryptoselected = $$a.concat([$$v]))
+                      } else {
+                        $$i > -1 &&
+                          (_vm.cryptoselected = $$a
+                            .slice(0, $$i)
+                            .concat($$a.slice($$i + 1)))
+                      }
                     } else {
-                      $$i > -1 &&
-                        (_vm.cryptoselected = $$a
-                          .slice(0, $$i)
-                          .concat($$a.slice($$i + 1)))
+                      _vm.cryptoselected = $$c
                     }
-                  } else {
-                    _vm.cryptoselected = $$c
                   }
                 }
-              }
-            }),
+              }),
+              _vm._v(" "),
+              _c("span", [_vm._v(_vm._s(value))])
+            ])
+          }),
+          0
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "p-rank-box__buttons" }, [
+          _c("ul", [
+            _c(
+              "li",
+              {
+                staticClass: "p-rank-box__buttons__btn",
+                class: { "is-active": _vm.isActive_hour },
+                on: { click: _vm.hourcomment }
+              },
+              [_vm._v("過去1時間")]
+            ),
             _vm._v(" "),
-            _c("span", [_vm._v(_vm._s(value))])
+            _c(
+              "li",
+              {
+                staticClass: "p-rank-box__buttons__btn",
+                class: { "is-active": _vm.isActive_day },
+                on: { click: _vm.daycomment }
+              },
+              [_vm._v("過去1日")]
+            ),
+            _vm._v(" "),
+            _c(
+              "li",
+              {
+                staticClass: "p-rank-box__buttons__btn",
+                class: { "is-active": _vm.isActive_week },
+                on: { click: _vm.weekcomment }
+              },
+              [_vm._v("過去1週間")]
+            )
           ])
-        }),
-        0
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "p-rank-box__buttons" }, [
-        _c("ul", [
-          _c(
-            "li",
-            {
-              staticClass: "p-rank-box__buttons__btn",
-              class: { "is-active": _vm.isActive_hour },
-              on: { click: _vm.hourcomment }
-            },
-            [_vm._v("過去1時間")]
-          ),
-          _vm._v(" "),
-          _c(
-            "li",
-            {
-              staticClass: "p-rank-box__buttons__btn",
-              class: { "is-active": _vm.isActive_day },
-              on: { click: _vm.daycomment }
-            },
-            [_vm._v("過去1日")]
-          ),
-          _vm._v(" "),
-          _c(
-            "li",
-            {
-              staticClass: "p-rank-box__buttons__btn",
-              class: { "is-active": _vm.isActive_week },
-              on: { click: _vm.weekcomment }
-            },
-            [_vm._v("過去1週間")]
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "p-rank-box__table" }, [
-        _c("div", { staticClass: "p-rank-box__table__update" }, [
-          _vm._v("更新日時:" + _vm._s(_vm.updatetime))
         ]),
         _vm._v(" "),
-        _c("table", [
-          _vm._m(1),
+        _c("div", { staticClass: "p-rank-box__table" }, [
+          _c("div", { staticClass: "p-rank-box__table__update" }, [
+            _vm._v("更新日時:" + _vm._s(_vm.updatetime))
+          ]),
           _vm._v(" "),
-          _c(
-            "tbody",
-            _vm._l(_vm.sortedItemsByAmount, function(crypto, index) {
-              return _c("tr", [
-                _c("td", { staticClass: "p-rank-box__table__no" }, [
-                  _vm._v(_vm._s(index + 1))
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "p-rank-box__table__name" }, [
-                  _c(
-                    "a",
-                    {
-                      attrs: {
-                        href: "https://twitter.com/search?q=%23" + crypto.name,
-                        target: "_blank"
-                      }
-                    },
-                    [_vm._v(_vm._s(crypto.name))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "p-rank-box__table__tweets" }, [
-                  _vm._v(_vm._s(crypto.commentnum))
-                ]),
-                _vm._v(" "),
-                _c("td", { staticClass: "p-rank-box__table__price" }, [
-                  _vm._v(_vm._s(crypto.currentprice))
+          _c("table", [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.sortedItemsByAmount, function(crypto, index) {
+                return _c("tr", [
+                  _c("td", { staticClass: "p-rank-box__table__no" }, [
+                    _vm._v(_vm._s(index + 1))
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "p-rank-box__table__name" }, [
+                    _c(
+                      "a",
+                      {
+                        attrs: {
+                          href:
+                            "https://twitter.com/search?q=%23" + crypto.name,
+                          target: "_blank"
+                        }
+                      },
+                      [_vm._v(_vm._s(crypto.name))]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "p-rank-box__table__tweets" }, [
+                    _vm._v(_vm._s(crypto.commentnum))
+                  ]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "p-rank-box__table__price" }, [
+                    _vm._v(_vm._s(crypto.currentprice))
+                  ])
                 ])
-              ])
-            }),
-            0
-          )
+              }),
+              0
+            )
+          ])
         ])
       ])
-    ])
-  ])
+    ],
+    1
+  )
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "p-wrapper_balls-guruguru" }, [
-      _c("span", { staticClass: "c-ball c-ball-1" }),
-      _vm._v(" "),
-      _c("span", { staticClass: "c-ball c-ball-2" }),
-      _vm._v(" "),
-      _c("span", { staticClass: "c-ball c-ball-3" }),
-      _vm._v(" "),
-      _c("span", { staticClass: "c-ball c-ball-4" }),
-      _vm._v(" "),
-      _c("span", { staticClass: "c-ball c-ball-5" }),
-      _vm._v(" "),
-      _c("span", { staticClass: "c-ball c-ball-6" }),
-      _vm._v(" "),
-      _c("span", { staticClass: "c-ball c-ball-7" }),
-      _vm._v(" "),
-      _c("span", { staticClass: "c-ball c-ball-8" })
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -37955,10 +37986,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TwitteraccountComponent.vue?vue&type=template&id=57858fa8&":
-/*!**************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TwitteraccountComponent.vue?vue&type=template&id=57858fa8& ***!
-  \**************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaginationComponent.vue?vue&type=template&id=5cc156e8&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PaginationComponent.vue?vue&type=template&id=5cc156e8& ***!
+  \**********************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -37970,269 +38001,138 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "l-main__inner" }, [
-    _c(
-      "div",
-      { staticClass: "p-wrapper", class: { "is-visible": _vm.isActive } },
-      [_vm._m(0)]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "p-tw-list" }, [
-      _c("div", { staticClass: "p-tw-list__title" }, [
-        _vm._v("Twitterアカウント")
-      ]),
-      _vm._v(" "),
-      _vm.message
-        ? _c("div", { staticClass: "p-tw-list__message" }, [
-            _vm._v("\n            " + _vm._s(_vm.message) + "\n        ")
+  return _c("ul", { staticClass: "p-tw-list__pagination" }, [
+    _c("div", { staticClass: "p-tw-list__pagination-div-prev" }, [
+      _vm.hasPrev
+        ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
+            _c(
+              "a",
+              {
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.move(_vm.first_page)
+                  }
+                }
+              },
+              [_vm._v("«")]
+            )
           ])
         : _vm._e(),
       _vm._v(" "),
-      _c("div", { staticClass: "p-tw-list__btn c-btn" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.auto_selected,
-              expression: "auto_selected"
-            }
-          ],
-          attrs: { type: "checkbox" },
-          domProps: {
-            checked: Array.isArray(_vm.auto_selected)
-              ? _vm._i(_vm.auto_selected, null) > -1
-              : _vm.auto_selected
-          },
-          on: {
-            change: function($event) {
-              var $$a = _vm.auto_selected,
-                $$el = $event.target,
-                $$c = $$el.checked ? true : false
-              if (Array.isArray($$a)) {
-                var $$v = null,
-                  $$i = _vm._i($$a, $$v)
-                if ($$el.checked) {
-                  $$i < 0 && (_vm.auto_selected = $$a.concat([$$v]))
-                } else {
-                  $$i > -1 &&
-                    (_vm.auto_selected = $$a
-                      .slice(0, $$i)
-                      .concat($$a.slice($$i + 1)))
-                }
-              } else {
-                _vm.auto_selected = $$c
-              }
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "c-btn__autofollow",
-            attrs: { type: "button", disabled: _vm.processing },
-            on: { click: _vm.auto_follow }
-          },
-          [_vm._v("\n                自動フォロー機能設定変更\n            ")]
-        ),
-        _vm._v(" "),
-        _vm._m(1)
-      ]),
-      _vm._v(" "),
-      _c("ul", { staticClass: "p-tw-list__pagination" }, [
-        _c("div", { staticClass: "p-tw-list__pagination-div-prev" }, [
-          _vm.hasPrev
-            ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
-                _c(
-                  "a",
-                  {
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.move(_vm.first_page)
-                      }
-                    }
-                  },
-                  [_vm._v("«")]
-                )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.hasPrev
-            ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
-                _c(
-                  "a",
-                  {
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.move(_vm.current_page - 1)
-                      }
-                    }
-                  },
-                  [_vm._v("<")]
-                )
-              ])
-            : _vm._e()
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "p-tw-list__pagination-div-main" },
-          _vm._l(_vm.pages, function(page) {
-            return _c(
-              "li",
+      _vm.hasPrev
+        ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
+            _c(
+              "a",
               {
-                staticClass: "p-tw-list__pagination__link",
-                class: _vm.getPageClass(page)
-              },
-              [
-                _c("a", {
-                  attrs: { href: "#" },
-                  domProps: { textContent: _vm._s(page) },
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.move(page)
-                    }
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.move(_vm.current_page - 1)
                   }
-                })
-              ]
+                }
+              },
+              [_vm._v("<")]
             )
-          }),
-          0
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "p-tw-list__pagination-div-next" }, [
-          _vm.hasNext
-            ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
-                _c(
-                  "a",
-                  {
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.move(_vm.current_page + 1)
-                      }
-                    }
-                  },
-                  [_vm._v(">")]
-                )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.hasNext
-            ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
-                _c(
-                  "a",
-                  {
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.move(_vm.last_page)
-                      }
-                    }
-                  },
-                  [_vm._v("»")]
-                )
-              ])
-            : _vm._e()
-        ])
-      ]),
+          ])
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "p-tw-list__pagination-div-main" },
+      _vm._l(_vm.pages, function(page) {
+        return _c(
+          "li",
+          {
+            staticClass: "p-tw-list__pagination__link",
+            class: _vm.getPageClass(page)
+          },
+          [
+            _c("a", {
+              attrs: { href: "#" },
+              domProps: { textContent: _vm._s(page) },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.move(page)
+                }
+              }
+            })
+          ]
+        )
+      }),
+      0
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "p-tw-list__pagination-div-next" }, [
+      _vm.hasNext
+        ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
+            _c(
+              "a",
+              {
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.move(_vm.current_page + 1)
+                  }
+                }
+              },
+              [_vm._v(">")]
+            )
+          ])
+        : _vm._e(),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "p-tw-list__box" },
-        [
-          _c("div", { staticClass: "p-tw-list__box__num" }, [
-            _vm._v(
-              _vm._s(_vm.total_user) +
-                "件中" +
-                _vm._s(_vm.active_usernum.start) +
-                "～" +
-                _vm._s(_vm.active_usernum.end) +
-                "件表示"
+      _vm.hasNext
+        ? _c("li", { staticClass: "p-tw-list__pagination__link" }, [
+            _c(
+              "a",
+              {
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.move(_vm.last_page)
+                  }
+                }
+              },
+              [_vm._v("»")]
             )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "p-tw-list__box__num" }, [
-            _vm._v(_vm._s(_vm.user_follow_num) + "件フォロー済")
-          ]),
-          _vm._v(" "),
-          _vm._l(_vm.follow_user, function(user, index) {
-            return _c(
-              "div",
-              { key: user.id, staticClass: "p-tw-list__box__detail" },
-              [
-                _c(
-                  "div",
-                  { staticClass: "p-tw-list__box__detail__btn c-btn" },
-                  [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "c-btn__userfollow",
-                        attrs: { type: "button", disabled: _vm.processing },
-                        on: {
-                          click: function($event) {
-                            return _vm.user_follow(index)
-                          }
-                        }
-                      },
-                      [_vm._v("フォロー")]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "p-tw-list__box__detail__name" }, [
-                  _vm._v(_vm._s(user.user_name))
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "p-tw-list__box__detail__sname" }, [
-                  _vm._v("@" + _vm._s(user.screen_name))
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "p-tw-list__box__detail__desc" }, [
-                  _vm._v(_vm._s(user.description))
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "p-tw-list__box__detail__count" }, [
-                  _c(
-                    "p",
-                    { staticClass: "p-tw-list__box__detail__count-followers" },
-                    [_vm._v(_vm._s(user.follows_count) + "フォロワー")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "p",
-                    { staticClass: "p-tw-list__box__detail__count-friends" },
-                    [_vm._v(_vm._s(user.friends_count) + "フォロー")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "p-tw-list__box__detail__text" }, [
-                  _c("p", [_vm._v("最新ツイート")]),
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(user.recent_tweet) +
-                      "\n                "
-                  )
-                ])
-              ]
-            )
-          })
-        ],
-        2
-      ),
-      _vm._v(" "),
-      _vm._m(2)
+          ])
+        : _vm._e()
     ])
   ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReadGuruguruComponent.vue?vue&type=template&id=8da7f52c&":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReadGuruguruComponent.vue?vue&type=template&id=8da7f52c& ***!
+  \************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "p-wrapper", class: { "is-visible": _vm.isActive } },
+    [_vm._m(0)]
+  )
 }
 var staticRenderFns = [
   function() {
@@ -38256,7 +38156,215 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("span", { staticClass: "c-ball c-ball-8" })
     ])
-  },
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TwitteraccountComponent.vue?vue&type=template&id=57858fa8&":
+/*!**************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TwitteraccountComponent.vue?vue&type=template&id=57858fa8& ***!
+  \**************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "l-main__inner" },
+    [
+      _c("readguruguru-component", { attrs: { isActive: _vm.isActive } }),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "p-tw-list" },
+        [
+          _c("div", { staticClass: "p-tw-list__title" }, [
+            _vm._v("Twitterアカウント")
+          ]),
+          _vm._v(" "),
+          _vm.message
+            ? _c("div", { staticClass: "p-tw-list__message" }, [
+                _vm._v("\n            " + _vm._s(_vm.message) + "\n        ")
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "p-tw-list__btn c-btn" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.auto_selected,
+                  expression: "auto_selected"
+                }
+              ],
+              attrs: { type: "checkbox" },
+              domProps: {
+                checked: Array.isArray(_vm.auto_selected)
+                  ? _vm._i(_vm.auto_selected, null) > -1
+                  : _vm.auto_selected
+              },
+              on: {
+                change: function($event) {
+                  var $$a = _vm.auto_selected,
+                    $$el = $event.target,
+                    $$c = $$el.checked ? true : false
+                  if (Array.isArray($$a)) {
+                    var $$v = null,
+                      $$i = _vm._i($$a, $$v)
+                    if ($$el.checked) {
+                      $$i < 0 && (_vm.auto_selected = $$a.concat([$$v]))
+                    } else {
+                      $$i > -1 &&
+                        (_vm.auto_selected = $$a
+                          .slice(0, $$i)
+                          .concat($$a.slice($$i + 1)))
+                    }
+                  } else {
+                    _vm.auto_selected = $$c
+                  }
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "c-btn__autofollow",
+                attrs: { type: "button", disabled: _vm.processing },
+                on: { click: _vm.auto_follow }
+              },
+              [
+                _vm._v(
+                  "\n                自動フォロー機能設定変更\n            "
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _vm._m(0)
+          ]),
+          _vm._v(" "),
+          _c("pagination-component", {
+            attrs: { last_page: _vm.last_page, current_page: _vm.current_page },
+            on: { parentMethod: _vm.updateCurrentPage }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "p-tw-list__box" },
+            [
+              _c("div", { staticClass: "p-tw-list__box__num" }, [
+                _vm._v(
+                  _vm._s(_vm.total_user) +
+                    "件中" +
+                    _vm._s(_vm.active_usernum.start) +
+                    "～" +
+                    _vm._s(_vm.active_usernum.end) +
+                    "件表示"
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "p-tw-list__box__num" }, [
+                _vm._v(_vm._s(_vm.user_follow_num) + "件フォロー済")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.follow_user, function(user, index) {
+                return _c(
+                  "div",
+                  { key: user.id, staticClass: "p-tw-list__box__detail" },
+                  [
+                    _c(
+                      "div",
+                      { staticClass: "p-tw-list__box__detail__btn c-btn" },
+                      [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "c-btn__userfollow",
+                            attrs: { type: "button", disabled: _vm.processing },
+                            on: {
+                              click: function($event) {
+                                return _vm.user_follow(index)
+                              }
+                            }
+                          },
+                          [_vm._v("フォロー")]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "p-tw-list__box__detail__name" }, [
+                      _vm._v(_vm._s(user.user_name))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "p-tw-list__box__detail__sname" },
+                      [_vm._v("@" + _vm._s(user.screen_name))]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "p-tw-list__box__detail__desc" }, [
+                      _vm._v(_vm._s(user.description))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "p-tw-list__box__detail__count" },
+                      [
+                        _c(
+                          "p",
+                          {
+                            staticClass:
+                              "p-tw-list__box__detail__count-followers"
+                          },
+                          [_vm._v(_vm._s(user.follows_count) + "フォロワー")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "p",
+                          {
+                            staticClass: "p-tw-list__box__detail__count-friends"
+                          },
+                          [_vm._v(_vm._s(user.friends_count) + "フォロー")]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "p-tw-list__box__detail__text" }, [
+                      _c("p", [_vm._v("最新ツイート")]),
+                      _vm._v(
+                        "\n                    " +
+                          _vm._s(user.recent_tweet) +
+                          "\n                "
+                      )
+                    ])
+                  ]
+                )
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _vm._m(1)
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -50473,6 +50581,8 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 Vue.component('twitteraccount-component', __webpack_require__(/*! ./components/TwitteraccountComponent.vue */ "./resources/js/components/TwitteraccountComponent.vue")["default"]);
 Vue.component('cryptorank-component', __webpack_require__(/*! ./components/CryptoRankComponent.vue */ "./resources/js/components/CryptoRankComponent.vue")["default"]);
+Vue.component('readguruguru-component', __webpack_require__(/*! ./components/ReadGuruguruComponent.vue */ "./resources/js/components/ReadGuruguruComponent.vue")["default"]);
+Vue.component('pagination-component', __webpack_require__(/*! ./components/PaginationComponent.vue */ "./resources/js/components/PaginationComponent.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -50603,6 +50713,144 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CryptoRankComponent_vue_vue_type_template_id_e29cee56___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CryptoRankComponent_vue_vue_type_template_id_e29cee56___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/PaginationComponent.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/PaginationComponent.vue ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _PaginationComponent_vue_vue_type_template_id_5cc156e8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PaginationComponent.vue?vue&type=template&id=5cc156e8& */ "./resources/js/components/PaginationComponent.vue?vue&type=template&id=5cc156e8&");
+/* harmony import */ var _PaginationComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PaginationComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/PaginationComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _PaginationComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _PaginationComponent_vue_vue_type_template_id_5cc156e8___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _PaginationComponent_vue_vue_type_template_id_5cc156e8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/PaginationComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/PaginationComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/PaginationComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./PaginationComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaginationComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/PaginationComponent.vue?vue&type=template&id=5cc156e8&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/PaginationComponent.vue?vue&type=template&id=5cc156e8& ***!
+  \****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationComponent_vue_vue_type_template_id_5cc156e8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./PaginationComponent.vue?vue&type=template&id=5cc156e8& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PaginationComponent.vue?vue&type=template&id=5cc156e8&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationComponent_vue_vue_type_template_id_5cc156e8___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PaginationComponent_vue_vue_type_template_id_5cc156e8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ReadGuruguruComponent.vue":
+/*!***********************************************************!*\
+  !*** ./resources/js/components/ReadGuruguruComponent.vue ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ReadGuruguruComponent_vue_vue_type_template_id_8da7f52c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ReadGuruguruComponent.vue?vue&type=template&id=8da7f52c& */ "./resources/js/components/ReadGuruguruComponent.vue?vue&type=template&id=8da7f52c&");
+/* harmony import */ var _ReadGuruguruComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReadGuruguruComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/ReadGuruguruComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ReadGuruguruComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ReadGuruguruComponent_vue_vue_type_template_id_8da7f52c___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ReadGuruguruComponent_vue_vue_type_template_id_8da7f52c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ReadGuruguruComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ReadGuruguruComponent.vue?vue&type=script&lang=js&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/ReadGuruguruComponent.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReadGuruguruComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ReadGuruguruComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReadGuruguruComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReadGuruguruComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReadGuruguruComponent.vue?vue&type=template&id=8da7f52c&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/ReadGuruguruComponent.vue?vue&type=template&id=8da7f52c& ***!
+  \******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReadGuruguruComponent_vue_vue_type_template_id_8da7f52c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ReadGuruguruComponent.vue?vue&type=template&id=8da7f52c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReadGuruguruComponent.vue?vue&type=template&id=8da7f52c&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReadGuruguruComponent_vue_vue_type_template_id_8da7f52c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReadGuruguruComponent_vue_vue_type_template_id_8da7f52c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

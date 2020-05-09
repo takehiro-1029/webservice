@@ -1,17 +1,8 @@
 <template>
     <div class="l-main__inner">
-        <div class="p-wrapper" :class="{'is-visible': isActive_readdone}">
-            <div class="p-wrapper_balls-guruguru">
-                <span class="c-ball c-ball-1"></span>
-                <span class="c-ball c-ball-2"></span>
-                <span class="c-ball c-ball-3"></span>
-                <span class="c-ball c-ball-4"></span>
-                <span class="c-ball c-ball-5"></span>
-                <span class="c-ball c-ball-6"></span>
-                <span class="c-ball c-ball-7"></span>
-                <span class="c-ball c-ball-8"></span>
-            </div>
-        </div>
+        
+        <readguruguru-component :isActive="isActive_readdone"></readguruguru-component>
+        
         <div class="p-rank-box">
             <div class="p-rank-box__title">トレンドランキング</div>
             <div class="p-rank-box__info">
@@ -59,7 +50,6 @@
 
 <script>
     export default {
-        props: [],
         /*
         btc:コインチェックAPIから取得したbitcoinの最高価格等を入れる
         updatetime:最後にコメント取得した時間をDBから取り出して入れる

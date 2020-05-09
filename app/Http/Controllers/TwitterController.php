@@ -57,7 +57,7 @@ class TwitterController extends Controller
 
 //        request_tokenが不正な値だった場合エラー
         if ($request->has('oauth_token') && $oauth_token !== $request->oauth_token) {
-            return Redirect::to('/mypage');
+            return Redirect::to('/news');
         }
 
 //        request_tokenからaccess_tokenを取得
@@ -91,24 +91,24 @@ class TwitterController extends Controller
         $api_limit_time = Auth::user()->where('id',Auth::id())->select('api_limit_time')->first();
         $now = Carbon::now();
         
-//        api制限中の場合はmypage画面に返す
+//        api制限中の場合はnews画面に返す
         if ($now < $api_limit_time->api_limit_time){
-            return redirect('/mypage')->with('flash_message', 'API制限中のためしばらくお待ちください。');
+            return redirect('/news')->with('flash_message', 'API制限中のためしばらくお待ちください。');
         };
         
 //        DBからTwitterユーザーデータをすべて取得（鍵垢などでデータが得られていないものは外す）
         $twitter_user = new TwitterUser;
 
-        $user_nofollowing_account = $twitter_user->orderBy('id', 'asc')->where('user_name','!=', 1)->where('delete_flg', 0)->paginate(15);
+        $user_nofollowing_account = $twitter_user->orderBy('id', 'asc')->where('user_name','!=', 1)->where('delete_flg', '0')->paginate(15);
         
 //        自動フォロー機能を有効にしているかDBから確認
         $autofollow_selected = Auth::user()->where('id',Auth::id())->select('autofollow_flg')->first()->autofollow_flg;
         
 //        DBからユーザーがフォローした数を取得する
-        $follow_num = UserFollowList::where('user_id',Auth::id())->where('follow_details','=', 'following')->count();
+        $user_follow_list = new UserFollowList;     
+        $follow_num = $user_follow_list->join('twitter_users', 'twitter_users.id', '=', 'users_follow_list.twitter_id')->where('user_id',Auth::id())->where('delete_flg', '0')->count();
         
         return view('twitter', ['user_nofollowing_account' => $user_nofollowing_account,'autofollow_selected' => $autofollow_selected,'follow_num' => $follow_num]);
-
     }
 
 //     トレンド画面へ遷移
@@ -146,4 +146,5 @@ class TwitterController extends Controller
     {
         return view('top');
     }
+    
 }

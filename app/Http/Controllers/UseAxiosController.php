@@ -117,8 +117,8 @@ class UseAxiosController extends Controller
             $user_follow_list->create($twitter_id);
         };
         
-//        DBからユーザーがフォローした数を取得する
-        $follow_num = UserFollowList::where('user_id',Auth::id())->where('follow_details','=', 'following')->count();
+//      DBからユーザーがフォローした数を取得する
+        $follow_num = $user_follow_list->join('twitter_users', 'twitter_users.id', '=', 'users_follow_list.twitter_id')->where('user_id',Auth::id())->where('delete_flg', '0')->count();
         
         return response()->json([
             'message' => $flash_message,
@@ -250,7 +250,7 @@ class UseAxiosController extends Controller
     public function twitterusershow()
     {
         $twitter_user = new TwitterUser;
-        $user_nofollowing_account = $twitter_user->orderBy('id', 'asc')->where('user_name','!=', 1)->paginate(15);
+        $user_nofollowing_account = $twitter_user->orderBy('id', 'asc')->where('user_name','!=', 1)->where('delete_flg', '0')->paginate(15);
         
         return response()->json([
              'user_nofollowing_account' => $user_nofollowing_account,

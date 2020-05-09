@@ -229,6 +229,7 @@ img {
 @media screen and (max-width: 414px) {
   .l-footer {
     font-size: 0.7rem;
+    box-shadow: none;
   }
 }
 
@@ -541,7 +542,7 @@ img {
 
 @media screen and (max-width: 414px) {
   .p-header__btn {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     width: 160px;
   }
 }
@@ -573,6 +574,7 @@ img {
   line-height: 40px;
   text-align: center;
   font-size: 1.4rem;
+  padding-right: 2%;
 }
 
 @media screen and (max-width: 414px) {
@@ -595,7 +597,7 @@ img {
     position: fixed;
     top: 0;
     right: -100%;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.9);
     width: 100%;
     height: 100%;
     padding-top: 50px;
@@ -638,7 +640,7 @@ img {
   transition: all 0.4s;
   box-sizing: border-box;
   position: relative;
-  width: 40px;
+  width: 35px;
   height: 32px;
   z-index: 3;
 }
@@ -776,7 +778,7 @@ img {
 @media screen and (max-width: 414px) {
   .p-news__box-list-link {
     line-height: 15px;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     padding-bottom: 5px;
   }
 }
@@ -1066,7 +1068,7 @@ img {
 .c-flash-message {
   text-align: center;
   font-size: 1rem;
-  line-height: 2.5;
+  line-height: 3;
   position: fixed;
   background-color: #3fdcff8f;
   width: 100%;
@@ -1074,14 +1076,6 @@ img {
   left: 0;
   font-weight: bold;
   z-index: 2;
-}
-
-@media screen and (max-width: 414px) {
-  .p-tw-list__message,
-  .c-flash-message {
-    font-size: 0.9rem;
-    line-height: 2;
-  }
 }
 
 .p-tw-list__btn {
@@ -1127,8 +1121,8 @@ img {
 
 @media screen and (max-width: 414px) {
   .p-tw-list__btn__content {
-    font-size: 0.8rem;
-    margin: 20px 5% 0 5%;
+    font-size: 0.85rem;
+    margin: 30px 5% 0 5%;
     padding-left: 20px;
     text-align: center;
   }
@@ -1261,11 +1255,14 @@ img {
   border-radius: 10px;
 }
 
+@media screen and (max-width: 414px) {
+  .p-tw-list__pagination__link a:hover {
+    background: none;
+  }
+}
+
 .p-tw-list__pagination__link.is-active {
-  color: #000;
   background: #ccf;
-  border-color: #00f;
-  border-radius: 10px;
 }
 
 .p-tw-list__box {

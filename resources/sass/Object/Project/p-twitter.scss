@@ -19,7 +19,7 @@
     &__message{
         text-align: center;
         font-size: 1rem;
-        line-height: 2.5;
+        line-height: 3;
         position: fixed;
         background-color: #3fdcff8f;
         width: 100%;
@@ -28,8 +28,6 @@
         font-weight: bold;
         z-index: 2;
         @include mq() {
-            font-size: 0.9rem;
-            line-height: 2;
         }
     }
     &__btn{
@@ -60,8 +58,8 @@
             margin-left: 5%;
             line-height: 20px;
             @include mq() {
-                font-size: 0.8rem;
-                margin: 20px 5% 0 5%;
+                font-size: 0.85rem;
+                margin: 30px 5% 0 5%;
                 padding-left: 20px;
                 text-align: center;
             }
@@ -157,13 +155,13 @@
                     background: #ccf;
                     border-color: #00f;
                     border-radius: 10px;
+                    @include mq() {
+                        background: none;
+                    }
                 }
             }
             &.is-active {
-                color: #000;
                 background: #ccf;
-                border-color: #00f;
-                border-radius: 10px;
             }
         }
     }

@@ -22,6 +22,8 @@ window.Vue = require('vue');
 
 Vue.component('twitteraccount-component', require('./components/TwitteraccountComponent.vue').default);
 Vue.component('cryptorank-component', require('./components/CryptoRankComponent.vue').default);
+Vue.component('readguruguru-component', require('./components/ReadGuruguruComponent.vue').default);
+Vue.component('pagination-component', require('./components/PaginationComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
